@@ -1,9 +1,9 @@
 package com.THIS.capstonehope.Controller;
 
-import com.THIS.capstonehope.Models.Donation;
-import com.THIS.capstonehope.Models.VolunteerCampaign;
-import com.THIS.capstonehope.Repository.DonationRepository;
-import com.THIS.capstonehope.Repository.VolunteerCampaignRepository;
+import com.THIS.capstonehope.Models.Campaign;
+
+import com.THIS.capstonehope.Repository.CampaignRepository;
+
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.http.HttpStatus;
 // import org.springframework.http.ResponseEntity;
@@ -115,74 +115,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/dashboard")
 public class DashboardController {
 
     @Autowired
-    private DonationRepository donationRepository;
-
-    @Autowired
-    private VolunteerCampaignRepository volunteerCampaignRepository;
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<?> getDashboardData() {
-        List<Donation> donations = donationRepository.findAll();
-        List<VolunteerCampaign> volunteerCampaigns = volunteerCampaignRepository.findAll();
-        return new ResponseEntity<>(new DashboardData(donations, volunteerCampaigns), HttpStatus.OK);
+    private CampaignRepository campaignRepo;
+    
+    
+    @GetMapping("/all")
+    public String allAccess() {
+      return "Public Content.";
     }
+    
+    
+    @GetMapping("/view")
+    public ResponseEntity<?> getDashboardData() {
+        List<Campaign> campaigns = campaignRepo.findAll();
+      
+        return new ResponseEntity<>(new DashboardData(campaigns), HttpStatus.OK);
+    }
+    
+    
 
     @GetMapping("/search")
     public ResponseEntity<?> searchProjects(@RequestParam String query) {
         if(StringUtils.hasText(query)) {
-            List<Donation> donations = donationRepository.findByTitleContainingIgnoreCase(query);
-            List<VolunteerCampaign> volunteerCampaigns = volunteerCampaignRepository.findByTitleContainingIgnoreCase(query);
-            return new ResponseEntity<>(new SearchResults(donations, volunteerCampaigns), HttpStatus.OK);
+            
+            List<Campaign> campaigns = campaignRepo.findByTitleContainingIgnoreCase(query);
+            return new ResponseEntity<>(new SearchResults(campaigns), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Query parameter is required for search", HttpStatus.BAD_REQUEST);
         }
     }
-
+    
+   //encapsulates dashboard funcs
     static class DashboardData {
-        private List<Donation> donations;
-        private List<VolunteerCampaign> volunteerCampaigns;
-
-        public DashboardData(List<Donation> donations, List<VolunteerCampaign> volunteerCampaigns) {
-            this.donations = donations;
-            this.volunteerCampaigns = volunteerCampaigns;
-        }
-
-        // Getters for donations and volunteerCampaigns
-        public List<Donation> getDonations() {
-            return donations;
-        }
-
-        public List<VolunteerCampaign> getVolunteerCampaigns() {
-            return volunteerCampaigns;
+        private List<Campaign> campaigns;
+        public DashboardData(List<Campaign> campaigns) {
+			// TODO Auto-generated constructor stub
+        	 this.campaigns = campaigns;
+		}
+     // Getters for donations and volunteerCampaigns
+        public List<Campaign> getCampaigns() {
+            return campaigns;
         }
     }
-
+//encapsulates search
     static class SearchResults {
-        private List<Donation> donations;
-        private List<VolunteerCampaign> volunteerCampaigns;
-
-        public SearchResults(List<Donation> donations, List<VolunteerCampaign> volunteerCampaigns) {
-            this.donations = donations;
-            this.volunteerCampaigns = volunteerCampaigns;
+        private List<Campaign> campaigns;
+        public SearchResults(List<Campaign> campaigns) {
+            this.campaigns = campaigns;
+        
         }
-
         // Getters for donations and volunteerCampaigns
-        public List<Donation> getDonations() {
-            return donations;
-        }
-
-        public List<VolunteerCampaign> getVolunteerCampaigns() {
-            return volunteerCampaigns;
-        }
+        public List<Campaign> getCampaigns() {
+            return campaigns;
+        } 
     }
 }
