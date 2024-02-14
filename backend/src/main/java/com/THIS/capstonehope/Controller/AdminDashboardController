@@ -1,0 +1,39 @@
+package com.THIS.capstonehope.Controller;
+
+import com.THIS.capstonehope.Models.Campaign;
+import com.THIS.capstonehope.Repository.CampaignRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin")
+public class AdminDashboardController {
+    
+    @Autowired
+    private CampaignRepository campaignRepository;
+
+    @GetMapping("/dashboard")
+    public List<Campaign> getPendingCampaigns() {
+        return campaignRepository.findByApprovedFalse();
+    }
+
+    @PostMapping("/approve/{id}")
+    public String approveCampaign(@PathVariable String id) {
+        Campaign campaign = campaignRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+        campaign.setApproved(true);
+        campaignRepository.save(campaign);
+
+        return "Campaign approved successfully";
+    }
+
+    @PostMapping("/decline/{id}")
+    public String declineCampaign(@PathVariable String id) {
+        campaignRepository.deleteById(id);
+
+        return "Campaign declined successfully";
+    }
+}

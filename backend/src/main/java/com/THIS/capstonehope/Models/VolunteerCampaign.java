@@ -12,6 +12,7 @@ public class VolunteerCampaign {
     private String location;
     private String timings;
     private int maxVolunteers;
+    private boolean approved; // New field
 
     // Getters
     public String getId() {
@@ -38,6 +39,10 @@ public class VolunteerCampaign {
         return maxVolunteers;
     }
 
+    public boolean isApproved() {
+        return approved;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -61,5 +66,9 @@ public class VolunteerCampaign {
 
     public void setMaxVolunteers(int maxVolunteers) {
         this.maxVolunteers = maxVolunteers;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

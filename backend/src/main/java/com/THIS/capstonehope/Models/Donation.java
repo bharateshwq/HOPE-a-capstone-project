@@ -13,6 +13,7 @@ public class Donation {
     private String image;
     private String contactDetails;
     private String email;
+    private boolean approved; // New field
 
     // Getters
     public String getId() {
@@ -43,6 +44,10 @@ public class Donation {
         return email;
     }
 
+    public boolean isApproved() {
+        return approved;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -70,5 +75,9 @@ public class Donation {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

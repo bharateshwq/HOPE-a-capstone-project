@@ -8,4 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface VolunteerCampaignRepository extends MongoRepository<VolunteerCampaign, String> {
  List<VolunteerCampaign> findByTitleContainingIgnoreCase(String title);
+ List<VolunteerCampaign> findByApproved(boolean approved);
 }
