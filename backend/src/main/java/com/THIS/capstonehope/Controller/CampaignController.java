@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import com.THIS.capstonehope.Models.Campaign;
 import com.THIS.capstonehope.Repository.CampaignRepository;
 
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/campaigns")
 public class CampaignController {
@@ -34,7 +36,10 @@ public class CampaignController {
 		    public List<Campaign> getAllCampaigns() {
 		        return campaignRepo.findAll();
 		    }
-	     
+	    @GetMapping("/list")
+	    public String getList() {
+	    	return "hello world";
+	    }
 	     @GetMapping("/all")
 	     public String allAccess() {
 	       return "Public Content.";
