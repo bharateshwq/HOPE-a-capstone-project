@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class Volunteer {
 	@Id
-	String id;
+	private String id;
 	private String volunteerid;
 	private String volunteerName;
 	private LocalDateTime enrolledOn;

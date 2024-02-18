@@ -1,10 +1,12 @@
 package com.THIS.capstonehope.Models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.THIS.capstonehope.security.models.User;
 
@@ -23,8 +25,10 @@ public class Campaign {
 	private String id;
 	private String title;
 	private String description;
-	private Double requiredAmount;
-	private Double requiredVolunteers;
+	private int requiredAmount;
+	private int requiredVolunteers;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private List<String> imageLink;
 	private String phoneNumber;
 	private String email;

@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.MethodNotAllowedException;
@@ -23,14 +25,13 @@ public class CampaignService {
 
 	private final CampaignRepository campaignRepo;
 	private final CampaignCalc campaignCalc;
-	private final User user;
 	private final IdService idService;
 	private final UserService userService;
 	
 	
 	
-	private static final String NOT_FOUND_MESSAGE1 = "No project with ";
-    private static final String NOT_FOUND_MESSAGE2 = " found";
+	private static final String NOT_FOUND_MESSAGE1 = "======================================================No project with ";
+    private static final String NOT_FOUND_MESSAGE2 = " found===========================================================================================================================================";
 
     
     
@@ -47,23 +48,27 @@ public class CampaignService {
         campaignCreation.setDonors(new ArrayList<>());
         campaignCreation.setVolunteers(new ArrayList<>());
         campaignCreation.setHostedBy(user.getId());
+        campaignCreation.setLegitimacy(false);
     	return campaignRepo.insert(campaignCreation);
     }
     public Campaign getCampaignById(String projectId) {
         return campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
     }
+    public Campaign verifyCampaign(String projectId,Boolean legitimacy) {
+        Campaign campaign = campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
+        campaign.setLegitimacy(legitimacy);
+        return campaignRepo.save(campaign);
+    }
     public Campaign updateCampaign(String id, Campaign projectNoId) {
         if (!campaignRepo.existsById(id)) throw new NoSuchElementException(NOT_FOUND_MESSAGE1 + id + NOT_FOUND_MESSAGE2);
-
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
        User user = userService.findByUsername(username);
 
-        if (!user.getId().equals(projectNoId.getHostedBy()))
+        if (!user.getId().toString().equals(projectNoId.getHostedBy()))
             throw new MethodNotAllowedException("You are not allowed to edit this project", null);
-
-
         projectNoId.setId(id);
-        return campaignRepo.save(projectNoId);
+        Campaign updatedCampaign = campaignRepo.save(projectNoId);
+        return updatedCampaign;
     }
     public void deleteCampaign(String projectId) {
         if (!campaignRepo.existsById(projectId)) throw new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2);
@@ -73,54 +78,55 @@ public class CampaignService {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-
+        Campaign campaign = campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
         Donation newDonation = Donation.builder()
         		.id(idService.createRandomId())
-        		.campaignId(donationCreation.getId())
-        		.campaignTitle(donationCreation.getCampaignTitle())
+        		.campaignId(projectId)
+        		.campaignTitle(campaign.getTitle())
         		.donatedOn(LocalDateTime.now())
+        		.amount(donationCreation.getAmount())
         		.transactionId(idService.createRandomId())
         		.donorName(user.getUsername())
         		.donorId(user.getId()).build();
-        
-
-        user.getDonations().add(newDonation);
+        user.appendDonation(newDonation);
         userService.updateUser(user);
 
-        Campaign campaign = campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
         campaign.appendDonation(newDonation);
 
         return campaignRepo.save(campaignCalc.donationProgressUpdate(campaign));
     }
-    public Campaign addParticipation(String projectId, Volunteer participationCreation) {
+    public Campaign addParticipation(String projectId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
 
         
+        Campaign campaign = campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
+        Boolean hasVolunteered = false;
+        for(Volunteer vol:campaign.getVolunteers()) {
+        if(vol.getVolunteerid().equals(user.getId())) { hasVolunteered = true; break;}
+        }
+        if(!hasVolunteered) {
         Volunteer newParticipation = Volunteer.builder()
         		.id(idService.createRandomId())
         		.volunteerid(user.getId())
         		.volunteerName(user.getUsername())
 				.enrolledOn(LocalDateTime.now())
-				.campaignId(participationCreation.getCampaignId())
-				.campaignName(participationCreation.getCampaignName())
+				.campaignId(projectId)
+				.campaignName(campaign.getTitle())
 				.build();
-        
-        
-        
-        
-
-        user.getVolunteerings().add(newParticipation);
+        user.appendVolunteers(newParticipation);
         userService.updateUser(user);
 
-        Campaign campaign = campaignRepo.findById(projectId).orElseThrow(() -> new NoSuchElementException(NOT_FOUND_MESSAGE1 + projectId + NOT_FOUND_MESSAGE2));
         campaign.appendVolunteers(newParticipation);
 
         return campaignRepo.save(campaignCalc.volunteerProgressUpdate(campaign));
+        }else {
+        return campaign;
+        }
+        }
     } 
 
 	
 	
 	
 	
-}

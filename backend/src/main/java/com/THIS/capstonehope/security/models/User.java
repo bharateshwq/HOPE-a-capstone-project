@@ -1,5 +1,6 @@
 package  com.THIS.capstonehope.security.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,8 +40,8 @@ public class User {
 
   @DBRef
   private Set<Role> roles = new HashSet<>();
-List<Donation> donations;
-List<Volunteer> volunteerings;
+private List<Donation> donations;
+private List<Volunteer> volunteerings;
   public User() {
   }
 //creation +email
@@ -57,6 +58,18 @@ List<Volunteer> volunteerings;
   this.volunteerings=volunteerings;
   }
 
+	public void appendDonation(Donation newDonation) {
+        if (this.donations == null) {
+            this.donations = new ArrayList<>();
+        }
+        this.donations.add(newDonation);
+    }	
+	public void appendVolunteers(Volunteer newVolunteer) {
+        if (this.volunteerings == null) {
+            this.volunteerings = new ArrayList<>();
+        }
+        this.volunteerings.add(newVolunteer);
+    }	
   public String getId() {
     return id;
   }

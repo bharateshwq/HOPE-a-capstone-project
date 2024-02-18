@@ -11,9 +11,11 @@ import com.THIS.capstonehope.security.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Donation {
 	@Id
@@ -21,14 +23,13 @@ public class Donation {
 	private String donorId;
 	private String donorName;
 	private String transactionId;
-	private BigDecimal amount;
+	private int amount;
 	private LocalDateTime donatedOn;
 	private String campaignId;
 	private String campaignTitle;
 	//doantion creation
-public Donation(String id,String title,BigDecimal amount ) {
-	this.campaignId=id;
-	this.campaignTitle=title;
+
+public Donation(int amount ) {
 	this.amount=amount;
 	
 }

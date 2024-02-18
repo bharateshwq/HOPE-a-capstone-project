@@ -1,11 +1,17 @@
 package com.THIS.capstonehope.Controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,15 +36,21 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/campaigns")
+@RequestMapping("/api/campaigns")
 public class CampaignController {
 
 	 @Autowired
 private final CampaignService campaignService;
 
-	 
+	@GetMapping("/check")
+	public UserDetails check() {
+		UserDetails userDetails =
+				(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		return userDetails;
+	}
 	 	@PostMapping
-	    public Campaign addCampaign(@RequestBody Campaign projectCreation) {
+	    public Campaign addCampaign(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Campaign projectCreation) {
 	        return campaignService.addCampaign(projectCreation);
 	    } 
 	 	@GetMapping("{id}")
@@ -53,12 +65,21 @@ private final CampaignService campaignService;
 	 	@PutMapping("{id}")
 	    public ResponseEntity<Campaign> updateCampaign(@PathVariable String id, @RequestBody Campaign projectNoId) {
 	        try {
-	            Campaign updatedProject = campaignService.updateCampaign(id, projectNoId);
+	            Campaign updatedProject= campaignService.updateCampaign(id, projectNoId);
 	            return ResponseEntity.ok(updatedProject);
 	        } catch (NoSuchElementException e) {
 	            return ResponseEntity.notFound().build();
 	        }
 	    } 
+	 	
+	 	
+	 	@PostMapping("/admin/verify/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+	 	public Campaign verifyCampaign(@PathVariable String id, @RequestParam Boolean legitimacy ) {
+	 		Campaign updateProject = campaignService.verifyCampaign(id,legitimacy);
+	 		return updateProject;
+	 	}
+	 	
 	 	@DeleteMapping("{id}")
 	    public ResponseEntity<String> deleteCampaign(@PathVariable String id) {
 
@@ -76,9 +97,10 @@ private final CampaignService campaignService;
 	    }
 
 	    @PostMapping("/volunteer/{id}")
-	    public Campaign addParticipation(@PathVariable String id, @RequestBody Volunteer VolunteerCollection) {
-	        return campaignService.addParticipation(id, VolunteerCollection);
+	    public Campaign addParticipation(@PathVariable String id) {
+	        return campaignService.addParticipation(id);
 	    } 
+	    
 	 
 	 
 	 
