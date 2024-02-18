@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import com.THIS.capstonehope.Models.Campaign;
 import com.THIS.capstonehope.Models.Donation;
 import com.THIS.capstonehope.Models.Volunteer;
 import com.THIS.capstonehope.Repository.CampaignRepository;
+import com.THIS.capstonehope.Repository.SearchFilterRepoImpl;
+import com.THIS.capstonehope.Repository.SearchFilteringRepository;
 import com.THIS.capstonehope.security.models.User;
 import com.THIS.capstonehope.security.security.services.UserService;
 
@@ -27,7 +30,6 @@ public class CampaignService {
 	private final CampaignCalc campaignCalc;
 	private final IdService idService;
 	private final UserService userService;
-	
 	
 	
 	private static final String NOT_FOUND_MESSAGE1 = "======================================================No project with ";
@@ -124,6 +126,11 @@ public class CampaignService {
         return campaign;
         }
         }
+    
+    
+    
+    
+    
     } 
 
 	

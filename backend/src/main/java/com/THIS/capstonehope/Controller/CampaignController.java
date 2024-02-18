@@ -28,6 +28,7 @@ import com.THIS.capstonehope.Models.Campaign;
 import com.THIS.capstonehope.Models.Donation;
 import com.THIS.capstonehope.Models.Volunteer;
 import com.THIS.capstonehope.Repository.CampaignRepository;
+import com.THIS.capstonehope.Repository.SearchFilteringRepository;
 import com.THIS.capstonehope.service.CampaignService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,9 @@ public class CampaignController {
 
 	 @Autowired
 private final CampaignService campaignService;
+	 
+	 @Autowired
+	 private final SearchFilteringRepository sfrep;
 
 	@GetMapping("/check")
 	public UserDetails check() {
@@ -49,30 +53,50 @@ private final CampaignService campaignService;
 
 		return userDetails;
 	}
+	//add campaign
 	 	@PostMapping
 	    public Campaign addCampaign(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Campaign projectCreation) {
 	        return campaignService.addCampaign(projectCreation);
 	    } 
+
 	 	@GetMapping("{id}")
 	    public Campaign getProjectById(@PathVariable String id) {
 	        return campaignService.getCampaignById(id);
 	    } 
 	 
 	 	@GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
 	    public List<Campaign> getAllProjects() {
 	        return campaignService.getAllCampaign();
 	    }	 
-	 	@PutMapping("{id}")
-	    public ResponseEntity<Campaign> updateCampaign(@PathVariable String id, @RequestBody Campaign projectNoId) {
-	        try {
-	            Campaign updatedProject= campaignService.updateCampaign(id, projectNoId);
-	            return ResponseEntity.ok(updatedProject);
-	        } catch (NoSuchElementException e) {
-	            return ResponseEntity.notFound().build();
-	        }
-	    } 
-	 	
-	 	
+	 	//search
+	 @GetMapping("/masterSearch")	
+	 public List<Campaign> findByText(@RequestParam String query){
+		return sfrep.findByText(query) ;
+		 
+	 }
+	 //Volunteer or donation fiilter
+	 @GetMapping("/filter/{type}")
+	 public List<Campaign> filterCampaign(@PathVariable String type){
+		 return sfrep.filterCampaign(type);
+	 }
+//main dash sort
+	 @GetMapping("/sort")
+	 public List<Campaign> sortCampaign(@RequestParam Boolean asc){
+		 return sfrep.sortCampaign(asc);
+	 }
+	 //mainDash
+	 @GetMapping("/mainDash")
+	 public List<Campaign> verifiedCampaigns(){
+		 return sfrep.VerifiedCampaign();
+	 }
+	 //admin dashboard
+	 @GetMapping("/mainAdminDash")
+  @PreAuthorize("hasRole('ADMIN')")
+	 public List<Campaign> sortedVerifiedandUnverCampaigns(){
+		 return sfrep.SortedVerifiedandUnverified();
+	 }
+//	 	
 	 	@PostMapping("/admin/verify/{id}")
   @PreAuthorize("hasRole('ADMIN')")
 	 	public Campaign verifyCampaign(@PathVariable String id, @RequestParam Boolean legitimacy ) {
