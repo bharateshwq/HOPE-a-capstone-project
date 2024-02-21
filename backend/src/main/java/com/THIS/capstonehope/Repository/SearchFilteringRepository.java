@@ -8,7 +8,7 @@ public interface SearchFilteringRepository {
 	
 	List<Campaign> findByText(String query);
 	List<Campaign> filterCampaign(String type);
-	List<Campaign> sortCampaign(Boolean asc);
+	List<Campaign> sortCampaign(int asc);
 	List<Campaign> VerifiedCampaign();
 	List<Campaign> SortedVerifiedandUnverified();
 	

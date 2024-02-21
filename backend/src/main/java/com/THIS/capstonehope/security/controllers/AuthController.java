@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.THIS.capstonehope.mail.services.EmailService;
 import com.THIS.capstonehope.security.models.ERole;
 import com.THIS.capstonehope.security.models.Role;
 import com.THIS.capstonehope.security.models.User;
@@ -44,6 +45,7 @@ public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
 
+
   @Autowired
   UserRepository userRepository;
 
@@ -55,6 +57,7 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+  
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -97,7 +100,6 @@ public class AuthController {
     User user = new User(signUpRequest.getUsername(),
             signUpRequest.getEmail(),
             encoder.encode(signUpRequest.getPassword()));
-
     Set<String> strRoles = signUpRequest.getRoles();
     Set<Role> roles = new HashSet<>();
 

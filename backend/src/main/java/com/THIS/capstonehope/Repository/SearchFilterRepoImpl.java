@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.THIS.capstonehope.Models.Campaign;
 import com.mongodb.client.AggregateIterable;
@@ -17,10 +18,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 @Component
+@Service
 public class SearchFilterRepoImpl implements SearchFilteringRepository{
 
 		@Autowired
-		MongoClient client;
+		private MongoClient client;
 		
 		
 		@Autowired
@@ -61,7 +63,7 @@ public class SearchFilterRepoImpl implements SearchFilteringRepository{
 		return campaigns;
 	}
 	@Override
-	public List<Campaign> sortCampaign(Boolean asc) {
+	public List<Campaign> sortCampaign(int asc) {
 		// TODO Auto-generated method stub
 		final List<Campaign> campaigns = new ArrayList<>();
 		MongoDatabase database = client.getDatabase("behumantest");

@@ -65,7 +65,7 @@ private final CampaignService campaignService;
 	    } 
 	 
 	 	@GetMapping
-  @PreAuthorize("hasRole('ADMIN')")
+	 	@PreAuthorize("hasRole('ADMIN')")
 	    public List<Campaign> getAllProjects() {
 	        return campaignService.getAllCampaign();
 	    }	 
@@ -76,22 +76,22 @@ private final CampaignService campaignService;
 		 
 	 }
 	 //Volunteer or donation fiilter
-	 @GetMapping("/filter/{type}")
+	 @GetMapping("filter/{type}")
 	 public List<Campaign> filterCampaign(@PathVariable String type){
 		 return sfrep.filterCampaign(type);
 	 }
 //main dash sort
-	 @GetMapping("/sort")
-	 public List<Campaign> sortCampaign(@RequestParam Boolean asc){
+	 @GetMapping("sort")
+	 public List<Campaign> sortCampaign(@RequestParam int asc){
 		 return sfrep.sortCampaign(asc);
 	 }
 	 //mainDash
-	 @GetMapping("/mainDash")
+	 @GetMapping("mainDash")
 	 public List<Campaign> verifiedCampaigns(){
 		 return sfrep.VerifiedCampaign();
 	 }
 	 //admin dashboard
-	 @GetMapping("/mainAdminDash")
+	 @GetMapping("mainAdminDash")
   @PreAuthorize("hasRole('ADMIN')")
 	 public List<Campaign> sortedVerifiedandUnverCampaigns(){
 		 return sfrep.SortedVerifiedandUnverified();
