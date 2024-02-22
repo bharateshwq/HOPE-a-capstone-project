@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url("background1.png") no-repeat;
+    background: url("./img/lpg.png") no-repeat; 
     background-size: cover;
     background-position: center;
 }
@@ -25,12 +25,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index :99;
+    z-index :99; 
+    /* background-color: rgb(194, 182, 182); */
     
 }
 
 .logo {
-
+    
+    font-family: 'Montserrat', sans-serif;
     font-size: 2em;
     color: whitesmoke;
 
@@ -38,16 +40,18 @@ header {
 }
 
 .navigation a {
-
+    
+    font-family: 'Montserrat', sans-serif;
     position: relative;
-    font-size: 1em;
+    font-size: 1.2rem;
     text-decoration: none;
     font-weight: 500;
     margin-left: 40px;
-    color :whitesmoke;
+    color :white;
     background: none;
     border-radius: 5px;
-    
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
 
 
 }
