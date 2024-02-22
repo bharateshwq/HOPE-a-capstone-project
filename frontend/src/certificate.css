@@ -1,0 +1,97 @@
+body {
+    font-family: Roboto;
+}
+
+.certificate-container {
+    padding: 50px;
+    width: 1024px;
+    
+}
+.certificate {
+    border: 20px solid #fff;
+    padding: 25px;
+    height: 600px;
+    position: relative;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; */
+    
+}
+
+.certificate:after {
+    content: '';
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    position: absolute;
+    background-image: url(xxx.jpg);
+    background-size: 100%;
+    z-index: -1;
+}
+
+/* .certificate-header > .logo {
+    width: 80px;
+    height: 80px;
+} */
+
+.certificate-title {
+    text-align: center;    
+}
+
+.certificate-body {
+    text-align: center;
+    margin-top: 100px;
+}
+
+h2 {
+
+    font-weight: 300;
+    font-size: 40px;
+    color: #0C5280;
+}
+
+
+.student-name {
+    font-size: 24px;
+}
+
+.certificate-content {
+    margin: 0 auto;
+    width: 750px;
+}
+
+.about-certificate {
+    width: 380px;
+    margin: 0 auto;
+}
+
+.topic-description {
+
+    text-align: center;
+}
+.left-corner {
+    text-align: justify;
+    text-justify: inter-word;
+}
+.right-corner {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.logo{
+    position: absolute;
+    bottom: 20px; /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+    padding-bottom: 20px;
+    
+}
+
+
+
+
+
