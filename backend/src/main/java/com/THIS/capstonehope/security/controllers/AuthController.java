@@ -1,6 +1,7 @@
 package com.THIS.capstonehope.security.controllers;
 
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,13 +17,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
 
-import com.THIS.capstonehope.mail.services.EmailService;
 import com.THIS.capstonehope.security.models.ERole;
 import com.THIS.capstonehope.security.models.Role;
 import com.THIS.capstonehope.security.models.User;
@@ -39,7 +42,7 @@ import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
 //for Angular Client (withCredentials)
 //@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials="true")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RestController
+@Controller
 @RequestMapping("/api/auth")
 public class AuthController {
   @Autowired
@@ -57,7 +60,11 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
-  
+  @GetMapping("/signin")
+  public String showSignInForm(Model model) {
+      return "login"; // This will return the signin.html Thymeleaf template
+  }
+ 
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
