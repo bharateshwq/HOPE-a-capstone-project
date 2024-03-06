@@ -1,13 +1,11 @@
 package com.THIS.capstonehope.service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.MethodNotAllowedException;
@@ -16,11 +14,11 @@ import com.THIS.capstonehope.Models.Campaign;
 import com.THIS.capstonehope.Models.Donation;
 import com.THIS.capstonehope.Models.Volunteer;
 import com.THIS.capstonehope.Repository.CampaignRepository;
-import com.THIS.capstonehope.Repository.SearchFilterRepoImpl;
-import com.THIS.capstonehope.Repository.SearchFilteringRepository;
+
 import com.THIS.capstonehope.security.models.User;
 import com.THIS.capstonehope.security.security.services.UserService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
@@ -30,6 +28,7 @@ public class CampaignService {
 	private final CampaignCalc campaignCalc;
 	private final IdService idService;
 	private final UserService userService;
+    private final EmailService emailService;
 	
 	
 	private static final String NOT_FOUND_MESSAGE1 = "======================================================No project with ";
@@ -94,6 +93,17 @@ public class CampaignService {
         userService.updateUser(user);
 
         campaign.appendDonation(newDonation);
+
+        ////sending email block EMAIL
+        try {
+            emailService.donation(user.getEmail(), username,donationCreation.getAmount().toString(),campaign.getHostedBy(),donationCreation.getTransactionId(),donationCreation.getDonatedOn());
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         return campaignRepo.save(campaignCalc.donationProgressUpdate(campaign));
     }

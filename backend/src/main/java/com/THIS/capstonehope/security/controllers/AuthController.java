@@ -95,7 +95,7 @@ public class AuthController {
     
                 //Mail sender block added
     try {
-      emailService.register(userDetails.getEmail(),userDetails.getUsername(),"LOGIN");
+      emailService.login(userDetails.getEmail(),userDetails.getUsername());
     } catch (UnsupportedEncodingException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -161,7 +161,7 @@ public class AuthController {
 
     //mail sender block
     try {
-      emailService.register(signUpRequest.getEmail(),signUpRequest.getUsername(),"REGISTER");
+      emailService.register(signUpRequest.getEmail(),signUpRequest.getUsername());
     } catch (UnsupportedEncodingException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

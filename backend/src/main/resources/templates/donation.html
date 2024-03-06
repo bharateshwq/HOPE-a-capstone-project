@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Invoice</title>
+  
+  <style>
+    .invoice {
+    background-color: rgba(1, 0,1, 0.1);
+    background-color: blur(10px);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color:black;
+  }
+  
+  .logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color:black;
+  }
+  
+  .text p {
+    margin-bottom: 10px;
+  }
+  
+  .donate-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .donate-link:hover {
+    text-decoration: underline;
+  }
+
+  .line {
+    border: none;
+    height: 1px; /* Thickness of the line */
+    background-color: grey; /* Color of the line */
+  }
+
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    
+    <img src="images/doantion_email.png" data-th-src="|cid:donation|" height="80" />
+    <p>Thank you, <span th:text="${name}"></span>Your donation of <span th:text="${donationfee}"></span> H.O.P.E will make a world of difference to <span th:text="${hostedBy}"></span></p>
+
+
+
+    <div class="text">
+     <hr class="line"></hr>
+      <p>Thank you,</p>
+      <p>Your Invoice:  <br> Donor Name: <span th:text="${donorName}"></span> <br> Order ID: <span th:text="${orderId}"></span> <br> Donation Date: <span th:text="${donationDate}"></span> </p>
+      <p>Three Cheers For You!</p>
+      <p>Fundraisers shared on social networks raise 3X more.</p>
+      <hr class="line"></hr>
+      <a th:href="@{/documents/example.pdf}" target="_blank">Download as an invoice PDF attachment</a>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -23,7 +23,7 @@ public class Donation {
 	private String donorId;
 	private String donorName;
 	private String transactionId;
-	private int amount;
+	private Integer amount;
 	private LocalDateTime donatedOn;
 	private String campaignId;
 	private String campaignTitle;
