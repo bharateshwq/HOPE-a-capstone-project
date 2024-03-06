@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&display=swap"> -->
     <!-- <link rel="stylesheet" href="certificate.css" /> -->
     <style>
         @page {
@@ -36,7 +43,7 @@
             position: absolute;
             /* background-image: url('@{/img/bg.jpg}'); */
  
-            /* background-image: url('C:/Users/kushala_gopal/code/htmltopdf/src/main/resources/templates/img/bg.jpg'); */
+             background-image: url('C:/Users/kushala_gopal/code/htmltopdf/src/main/resources/templates/img/bg.jpg');
             /* background-size: cover;
             z-index: -1; */
         }
@@ -94,6 +101,25 @@
             height: auto;
             padding-bottom: 20px;
         }
+ 
+        .last-sentence{
+            text-align: center;
+            /* padding:1px; */
+            position: relative;
+            top: -20px;
+            color:rgb(136, 91, 65);
+            font-size: 30px;
+            font-weight: bold;
+            font-family: "Dancing Script", cursive;
+        }
+ 
+        .footer-title{
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: black  !important;
+            font-family: "Roboto Slab", serif  !important;
+        }
     </style>
 </head>
 <body >
@@ -121,9 +147,9 @@
         <p>Date: <span th:text="${employee.date}">______________________</span></p>
     </div>
 </div>
- 
-<!-- <p class="last-sentence">Help others prosper eternally</p>
-</div> -->
+<p class="footer-title ">H.O.P.E</p>
+<p class="last-sentence">Help others prosper eternally</p>
+<!-- </div>  -->
                 <!-- <div class="right corner">
                     <p>Signature: ______________________</p>
                 </div> -->
@@ -133,3 +159,4 @@
     </div>
 </body>
 </html>
+ 

@@ -39,6 +39,7 @@ import com.THIS.capstonehope.security.repository.RoleRepository;
 import com.THIS.capstonehope.security.repository.UserRepository;
 import com.THIS.capstonehope.security.security.jwt.JwtUtils;
 import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
+import com.THIS.capstonehope.security.util.OtpUtil;
 import com.THIS.capstonehope.service.EmailService;
 
 
@@ -66,10 +67,13 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
-  @GetMapping("/signin")
-  public String showSignInForm(Model model) {
-      return "login"; // This will return the signin.html Thymeleaf template
-  }
+
+ 
+
+  // @GetMapping("/signin")
+  // public String showSignInForm(Model model) {
+  //     return "login"; // This will return the signin.html Thymeleaf template
+  // }
  
 
   @PostMapping("/signin")
@@ -81,14 +85,14 @@ public class AuthController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
+    
     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
     List<String> roles = userDetails.getAuthorities().stream()
             .map(item -> item.getAuthority())
             .collect(Collectors.toList());
 
-
+    
                 //Mail sender block added
     try {
       emailService.register(userDetails.getEmail(),userDetails.getUsername(),"LOGIN");
@@ -127,6 +131,7 @@ public class AuthController {
     User user = new User(signUpRequest.getUsername(),
             signUpRequest.getEmail(),
             encoder.encode(signUpRequest.getPassword()));
+
     Set<String> strRoles = signUpRequest.getRoles();
     Set<Role> roles = new HashSet<>();
 
@@ -156,7 +161,7 @@ public class AuthController {
 
     //mail sender block
     try {
-      emailService.register(signUpRequest.getEmail(),signUpRequest.getUsername(),"LOGIN");
+      emailService.register(signUpRequest.getEmail(),signUpRequest.getUsername(),"REGISTER");
     } catch (UnsupportedEncodingException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

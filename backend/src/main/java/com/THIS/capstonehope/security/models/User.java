@@ -1,5 +1,7 @@
 package  com.THIS.capstonehope.security.models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +40,13 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  // for otp generation and MFA
+  // private boolean mfaEnabled;
+
+  // private String secret;
+
+
+//------------------
   @DBRef
   private Set<Role> roles = new HashSet<>();
 private List<Donation> donations;

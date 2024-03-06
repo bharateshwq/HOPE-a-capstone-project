@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -17,10 +18,14 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
+import com.THIS.capstonehope.security.util.OtpUtil;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+
+
+
 
 @Component
 public class EmailService{
@@ -36,6 +41,10 @@ public class EmailService{
 
 	  private final TemplateEngine htmlTemplateEngine;
 	  
+	  
+	@Autowired
+	OtpUtil otpUtil;
+	
 	  public EmailService(Environment environment, JavaMailSender mailSender, TemplateEngine htmlTemplateEngine) {
 	    this.environment = environment;
 	    this.mailSender = mailSender;
@@ -47,8 +56,10 @@ public class EmailService{
 	public ResponseEntity<Object> register(String emailString, String userNameString,String emailKind)
 	      throws MessagingException, UnsupportedEncodingException {
 	       Context ctx;
-			switch (emailKind) {
+		   switch (emailKind) {
 				case "LOGIN":
+				{String OTP ="abc";
+				//String OTP=otpUtil.generateOtp();
 				  MAIL_SUBJECT = "Good to have you back!";
 				  TEMPLATE_NAME = "login";
 				  ctx = new Context(LocaleContextHolder.getLocale());
@@ -56,19 +67,29 @@ public class EmailService{
 					ctx.setVariable("OTP", OTP);
 					ctx.setVariable("name", userNameString);
 					ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
-					TEMPLATE_NAME = "templates/login.html";
-					break;
+					TEMPLATE_NAME = "login.html";
+					break;}
 				case "REGISTER":
-				 MAIL_SUBJECT = "Account Confirmation!";
+				{ MAIL_SUBJECT = "Account Confirmation!";
 				 TEMPLATE_NAME = "registration";
 				    ctx = new Context(LocaleContextHolder.getLocale());
 					ctx.setVariable("email", emailString);
 					ctx.setVariable("name", userNameString);
 					ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
 	    //ctx.setVariable("url", confirmationUrl);
-					break;
+					break;}
+				case "DONATION":
+				ctx = new Context(LocaleContextHolder.getLocale());
+
+
+				break;
+				case "VOLUNTEER":
+				ctx = new Context(LocaleContextHolder.getLocale());
+
+				break;
 				default:
 					 MAIL_SUBJECT = "How did you get this email!!";
+					 ctx = new Context(LocaleContextHolder.getLocale());
 					break;
 			}
 
