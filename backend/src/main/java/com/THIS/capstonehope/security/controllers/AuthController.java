@@ -1,11 +1,13 @@
 package com.THIS.capstonehope.security.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.ui.Model;
 
 import com.THIS.capstonehope.security.models.ERole;
@@ -37,6 +39,7 @@ import com.THIS.capstonehope.security.repository.RoleRepository;
 import com.THIS.capstonehope.security.repository.UserRepository;
 import com.THIS.capstonehope.security.security.jwt.JwtUtils;
 import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
+import com.THIS.capstonehope.service.EmailService;
 
 
 //for Angular Client (withCredentials)
@@ -59,6 +62,9 @@ public class AuthController {
   PasswordEncoder encoder;
 
   @Autowired
+  EmailService emailService;
+
+  @Autowired
   JwtUtils jwtUtils;
   @GetMapping("/signin")
   public String showSignInForm(Model model) {
@@ -68,7 +74,7 @@ public class AuthController {
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+   
     Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -81,6 +87,20 @@ public class AuthController {
     List<String> roles = userDetails.getAuthorities().stream()
             .map(item -> item.getAuthority())
             .collect(Collectors.toList());
+
+
+                //Mail sender block added
+    try {
+      emailService.register(userDetails.getEmail(),userDetails.getUsername(),"LOGIN");
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (MessagingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
             .body(new UserInfoResponse(userDetails.getId(),
@@ -133,6 +153,18 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
+
+    //mail sender block
+    try {
+      emailService.register(signUpRequest.getEmail(),signUpRequest.getUsername(),"LOGIN");
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (MessagingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }

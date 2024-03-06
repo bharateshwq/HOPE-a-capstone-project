@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="certificate.css" /> -->
+    <style>
+        @page {
+            size: landscape;
+        }
+ 
+        body {
+            font-family: Roboto;
+        }
+ 
+        .certificate-container {
+            padding: 10px;
+            width: 900px; /* Adjust width for landscape */
+            height: 600px; /* Adjust height for landscape */
+        }
+ 
+        .certificate {
+            border: 20px solid #000000;
+            padding: 25px;
+            height: 500px; /* Adjust height for landscape */
+            position: relative;
+        }
+ 
+        .certificate:after {
+            content: '';
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            right: 0px;
+            position: absolute;
+            /* background-image: url('@{/img/bg.jpg}'); */
+ 
+            /* background-image: url('C:/Users/kushala_gopal/code/htmltopdf/src/main/resources/templates/img/bg.jpg'); */
+            /* background-size: cover;
+            z-index: -1; */
+        }
+ 
+        .certificate-title {
+            text-align: center;    
+        }
+ 
+        .certificate-body {
+            text-align: center;
+            margin-top: 25px;
+        }
+ 
+        h2 {
+            font-weight: 300;
+            font-size: 40px;
+            color: #0C5280;
+        }
+ 
+        .student-name {
+            font-size: 24px;
+        }
+ 
+        .certificate-content {
+            margin: 0 auto;
+            width: 750px;
+        }
+ 
+        .about-certificate {
+            width: 380px;
+            margin: 0 auto;
+        }
+ 
+        .topic-description {
+            text-align: center;
+        }
+ 
+        .left-corner {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+ 
+        .right-corner {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+ 
+        .logo {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: auto;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body >
+    <div class="certificate-container">
+        <div class="certificate">
+            <div class="certificate-body">
+                <h2>Certificate of Appreciation</h2>
+               
+                <p class="student-name" th:text="${employee.name}">Name</p>
+                <div class="certificate-content">
+                    <div class="about-certificate">
+                        <p>
+                            for his extraordinary service and dedication towards
+                        </p>
+                        <h3 th:text="${employee.campaignName}">Campaign Name</h3>
+                    </div>
+                    <!-- <p class="topic-title">  -->
+                    </p>
+                    <div class="text-center">
+                        <p class="topic-description text-muted">HOPE acknowledges <span th:text="${name}">Name</span> for your invaluable participation in our campaign, demonstrating commitment to our cause.</p>
+                        <p>Your dedication and contribution have made a meaningful impact, inspiring positive change within our community.</p>
+                    </div>
+    </div>
+        <div class="left corner">
+        <p>Date: <span th:text="${employee.date}">______________________</span></p>
+    </div>
+</div>
+ 
+<!-- <p class="last-sentence">Help others prosper eternally</p>
+</div> -->
+                <!-- <div class="right corner">
+                    <p>Signature: ______________________</p>
+                </div> -->
+            </div>
+            <!-- <img src="/htmltopdf/src/main/resources/templates/img/logo2 (1).PNG" class="logo" alt="logo"> -->
+        </div>
+    </div>
+</body>
+</html>
