@@ -95,15 +95,15 @@ public class CampaignService {
         campaign.appendDonation(newDonation);
 
         ////sending email block EMAIL
-        try {
-            emailService.donation(user.getEmail(), username,donationCreation.getAmount().toString(),campaign.getHostedBy(),donationCreation.getTransactionId(),donationCreation.getDonatedOn());
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // try {
+        //     emailService.donation(user.getEmail(), username,donationCreation.getAmount().toString(),campaign.getHostedBy(),donationCreation.getTransactionId(),donationCreation.getDonatedOn(),campaign.getTitle());
+        // } catch (UnsupportedEncodingException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // } catch (MessagingException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
 
         return campaignRepo.save(campaignCalc.donationProgressUpdate(campaign));
     }
@@ -128,6 +128,17 @@ public class CampaignService {
 				.build();
         user.appendVolunteers(newParticipation);
         userService.updateUser(user);
+        
+        //mail sender
+        try {
+            emailService.volunteering(user.getUsername(), user.getEmail(), campaign.getTitle(), user.getId(), campaign.getOnDateTime());
+        } catch (UnsupportedEncodingException e) {
+            
+            e.printStackTrace();
+        } catch (MessagingException e) {
+             
+            e.printStackTrace();
+        }
 
         campaign.appendVolunteers(newParticipation);
 

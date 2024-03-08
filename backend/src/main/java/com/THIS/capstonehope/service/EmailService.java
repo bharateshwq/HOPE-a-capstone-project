@@ -23,6 +23,7 @@ import org.thymeleaf.context.Context;
 import com.THIS.capstonehope.security.models.User;
 import com.THIS.capstonehope.security.util.OtpUtil;
 
+import jakarta.activation.DataSource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -53,7 +54,7 @@ public class EmailService{
 	    this.mailSender = mailSender;
 	    this.htmlTemplateEngine = htmlTemplateEngine;
 	  }
-	  private ResponseEntity<Object> sendMail(String sendTo) throws MessagingException, UnsupportedEncodingException
+	  private ResponseEntity<Object> sendMail(String sendTo,DataSource attachment) throws MessagingException, UnsupportedEncodingException
 	  {
 		String mailFrom = environment.getProperty("spring.mail.properties.mail.smtp.from");
 	    String mailFromName = environment.getProperty("mail.from.name", "Identity");
@@ -65,7 +66,12 @@ public class EmailService{
 	    email.setTo(sendTo);
 	    email.setSubject(MAIL_SUBJECT);
 	    email.setFrom(new InternetAddress(mailFrom, mailFromName));
-
+		
+		
+		if(attachment!=null){
+		email.addAttachment("Certificate.pdf", attachment );
+		}
+		
 		final String htmlContent = this.htmlTemplateEngine.process(TEMPLATE_NAME, ctx);
 
 	    email.setText(htmlContent, true);
@@ -93,7 +99,7 @@ public class EmailService{
 			   ctx.setVariable("email", emailString);
 			   ctx.setVariable("name", userNameString);
 			   ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
-				sendMail(emailString);
+				sendMail(emailString,null);
 			
 			}
 
@@ -111,10 +117,10 @@ public class EmailService{
 					ctx.setVariable("name", userNameString);
 					ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
 					TEMPLATE_NAME = "login.html";
-					sendMail(emailString);
+					sendMail(emailString,null);
 	  }
 	  
-	  public void donation(String emailString, String userNameString,String amount, String hostedBy, String transactionId,LocalDateTime donationDate) throws UnsupportedEncodingException, MessagingException{
+	  public void donation(String emailString, String userNameString,String amount, String hostedBy, String transactionId,LocalDateTime donationDate,String projectTitle) throws UnsupportedEncodingException, MessagingException{
 			MAIL_SUBJECT = "Thank you for your donation";
 			TEMPLATE_NAME="donation";
 			/// TODO pdf generation to be added here
@@ -126,12 +132,31 @@ public class EmailService{
 			ctx.setVariable("donorName", userNameString);
 			ctx.setVariable("orderId", transactionId);
 			ctx.setVariable("donationDate", donationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+			//TODO generate pdf
+			// DataSource attachment;
+				
+			
 
-			sendMail(emailString);
+			// sendMail(emailString,attachment);
 	  }
 
 
-	  public void volunteering(String emailString, String userNameString) throws UnsupportedEncodingException, MessagingException{
+	  public void volunteering(String emailString, String userNameString,String campaignName, String orderId, LocalDateTime volunteeringDate ) throws UnsupportedEncodingException, MessagingException{
+
+		MAIL_SUBJECT = "Thank you for your participation";
+		TEMPLATE_NAME="volunteer";
+		ctx = new Context(LocaleContextHolder.getLocale());
+		ctx.setVariable("name", userNameString);
+		ctx.setVariable("campain_name",  campaignName);
+		ctx.setVariable("volunteer_name",userNameString );
+		ctx.setVariable("orderId",orderId );
+		ctx.setVariable("donationDate", volunteeringDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+		sendMail(emailString, null);
+		
+		
+
+
 
 	  }
  

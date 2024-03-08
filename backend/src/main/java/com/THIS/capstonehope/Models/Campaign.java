@@ -29,6 +29,8 @@ public class Campaign {
 	private int requiredVolunteers;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
+	//variable that stores volunteering activity date
+	private LocalDateTime onDateTime;
 	private List<String> imageLink;
 	private String phoneNumber;
 	private String email;

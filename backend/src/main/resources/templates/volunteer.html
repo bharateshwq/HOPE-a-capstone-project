@@ -1,0 +1,102 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Invoice</title>
+  <link rel="stylesheet" href="email.css">
+</head>
+<body>
+  <div class="invoice">
+    <img src="donation.png.png" alt="Invoice Logo" class="logo">
+    <p><b>Thank you, ${name}. Your donation of ${donationfee} H.O.P.E will make a world of difference to ${HostedBy}</b></p>
+    <div class="text">
+     <hr class="line"></hr>
+      <p>Thank you,</p>
+      <p>Your Invoice:  <br> Donor Name:  <br> Order ID: <br> Donation Date: </p>
+      <p>Three Cheers For You!</p>
+      <p>Fundraisers shared on social networks raise 3X more.</p>
+      <hr class="line"></hr>
+      <a href="documents/example.pdf" target="_blank">Download as a invoice PDF attachment</a>
+
+      
+    </div>
+  </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>volunteer Invoice</title>
+  <link rel="stylesheet" href="volunteer.css">
+  <style>
+.invoice {
+    background-color: rgba(1, 0,1, 0.1);
+    background-color: blur(10px);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color:black;
+  }
+  
+  .logo {
+    max-width: 150%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color:black;
+  }
+  
+  .text p {
+    margin-bottom: 10px;
+  }
+  
+  .donate-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .donate-link:hover {
+    text-decoration: underline;
+  }
+
+  .line {
+    border: none;
+    height: 1px; /* Thickness of the line */
+    background-color: grey; /* Color of the line */
+  }
+
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    
+    <img src="images/volunteer.png" data-th-src="|cid:springLogo|" alt="Invoice Logo" height="80" class="logo"/>
+    <p>Thank you, <span th:text="${name}"></span>for volunteering for <span th:text="${campain_name}"></span> H.O.P.E will make a world of difference to <span th:text="${campaig_name}"></span></p>
+
+
+
+    <div class="text">
+     <hr class="line"></hr>
+      <p>Thank you,</p>
+      <p>Your Invoice:  <br> Donor Name: <span th:text="${volunteer_name}"></span> <br> Order ID: <span th:text="${orderId}"></span> <br> volunteering Date: <span th:text="${ }"></span> </p>
+      <p>Three Cheers For You!</p>
+      <p>Fundraisers shared on social networks raise 3X more.</p>
+      <hr class="line"></hr>
+      <!-- <a th:href="@{/documents/example.pdf}" target="_blank">Download as an invoice PDF attachment</a> -->
+    </div>
+  </div>
+</body>
+</html>
