@@ -27,12 +27,13 @@
   Your account has been created on our platform; here is your login information
   <br/><br/>
   Email address : <b th:text="${email}">email</b><br/>
+   <br/><br/>
+  Your OTP is: <h2 th:text="${otp}">OTP</h2><br/> 
   <br/>
-  To confirm the validity of your email address, please click on the link below
-</p>
-<p style="text-align: left;">
-  <a class="link" href="#" th:href="${url}">Confirm my account</a>
-</p>
+  This OTP is only valid for 1 minute.
+  <br/>
+  Thank you for helping us maintain the security of your account.
+<br>
 <br>
 <p>
   <img src="images/spring.png" data-th-src="|cid:springLogo|" height="80" />

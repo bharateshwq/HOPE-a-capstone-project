@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -88,6 +89,40 @@ public class EmailService{
 	    return new ResponseEntity<>(body, HttpStatus.OK);
 
 	  }
+	  private ResponseEntity<Object> sendMail(String sendTo, String otp ,DataSource attachment) throws MessagingException, UnsupportedEncodingException
+	  {
+		String mailFrom = environment.getProperty("spring.mail.properties.mail.smtp.from");
+	    String mailFromName = environment.getProperty("mail.from.name", "Identity");
+
+	    final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+	    final MimeMessageHelper email;
+	    email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+	    email.setTo(sendTo);
+	    email.setSubject(MAIL_SUBJECT);
+	    email.setFrom(new InternetAddress(mailFrom, mailFromName));
+		
+		
+		if(attachment!=null){
+		email.addAttachment("Certificate.pdf", attachment );
+		}
+		ctx.setVariable("otp", otp);
+		final String htmlContent = this.htmlTemplateEngine.process(TEMPLATE_NAME, ctx);
+
+	    email.setText(htmlContent, true);
+
+	    ClassPathResource clr = new ClassPathResource(SPRING_LOGO_IMAGE);
+
+	    email.addInline("springLogo", clr, PNG_MIME);
+
+	    mailSender.send(mimeMessage);
+
+	    Map<String, String> body = new HashMap<>();
+	    body.put("message","mail sent successfully");
+	    
+	    return new ResponseEntity<>(body, HttpStatus.OK);
+
+	  }
 	  
 	  
 	//   @SuppressWarnings("null")
@@ -99,9 +134,22 @@ public class EmailService{
 			   ctx.setVariable("email", emailString);
 			   ctx.setVariable("name", userNameString);
 			   ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
-				sendMail(emailString,null);
+			   String otp = generateOTP();
+
+				sendMail(emailString,otp,null);
 			
 			}
+			private String generateOTP() {
+				// Generate your OTP logic here
+				// For example:
+				int otpLength = 6;
+				Random random = new Random();
+				StringBuilder otpBuilder = new StringBuilder();
+				for (int i = 0; i < otpLength; i++) {
+					otpBuilder.append(random.nextInt(10)); // Append random digits (0-9)
+				}
+				return otpBuilder.toString();
+}
 
 	
 
