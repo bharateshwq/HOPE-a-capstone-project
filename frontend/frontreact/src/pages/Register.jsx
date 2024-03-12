@@ -1,90 +1,265 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { Alert, Typography } from "@material-tailwind/react";
+import axios from '../api/axios';
+
+const USER_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
+// const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const PWD_REGEX = /.*/;
+const REGISTER_URL="/signup";
+
+
 
 const Register = () => {
+  const userRef = useRef();
+  const emailRef = useRef();
+  const pwdRef = useRef();
+
+  const [validName, setValidName] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
+  const [validPwd, setValidPwd] = useState(false);
+
+  const [userFocus, setUserFocus] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [pwdFocus, setPwdFocus] = useState(false);
+
+  const [user, setUser] = useState('');
+  const [email, setEmail] = useState('');
+  const [pwd, setPwd] = useState('');
+
+  const [agreeTerms, setAgreeTerms] = useState(false);
+
+
+  useEffect(() => {
+    userRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    const result = USER_REGEX.test(user);
+    setValidName(result);
+  }, [user]);
+
+  useEffect(() => {
+    const result = PWD_REGEX.test(pwd);
+    setValidPwd(result);
+  }, [pwd]);
+
+  useEffect(() => {
+    setValidEmail(validateEmail(email));
+  }, [email]);
+
+  const validateEmail = (value) => {
+    // Basic email validation
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post('/api/auth/signup', {
+        username: user,
+        email: email,
+        password: pwd,
+        roles: ['user'] // Assuming the default role is 'user'
+      });
+  
+      // Handle success response
+      console.log(response.data); // Log the response data
+    } catch (error) {
+      // Handle error
+      console.error('Error:', error.response.data); // Log the error response data
+    }
+    setUser(""); setPwd(""); setEmail("");
+  };
+
+
+  
+
   return (
-    <div className=''>
-    <div class="relative flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border justify-center items-center mt-24">
-    <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-      Sign Up
-    </h4>
-    <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-      Nice to meet you! Enter your details to register.
-    </p>
-    <form class="max-w-screen-lg mt-8 mb-2 w-80 sm:w-96">
-      <div class="flex flex-col gap-6 mb-1">
-        <h6
-          class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-          Your Name
-        </h6>
-        <div class="relative h-11 w-full min-w-[200px]">
-          <input placeholder="Your Name"
-            class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" />
-          <label
-            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-        </div>
-        <h6
-          class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-          Your Email
-        </h6>
-        <div class="relative h-11 w-full min-w-[200px]">
-          <input placeholder="name@mail.com"
-            class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" />
-          <label
-            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-        </div>
-        <h6
-          class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-          Password
-        </h6>
-        <div class="relative h-11 w-full min-w-[200px]">
-          <input type="password" placeholder="********"
-            class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50" />
-          <label
-            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-        </div>
-      </div>
-      <div class="inline-flex items-center">
-        <label class="relative -ml-2.5 flex cursor-pointer items-center rounded-full p-3" htmlFor="remember">
-          <input type="checkbox"
-            class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:bg-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"
-            id="remember" />
-          <span
-            class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
-              stroke="currentColor" stroke-width="1">
-              <path fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
-          </span>
-        </label>
-        <label class="mt-px font-light text-gray-700 cursor-pointer select-none" htmlFor="remember">
-          <p class="flex items-center font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-            I agree the
-            <a href="#" class="font-medium transition-colors hover:text-gray-900">
-              &nbsp;Terms and Conditions
-            </a>
+    <div className="flex justify-center items-center h-screen">
+      <div className="bg-white p-4 rounded-xl shadow-lg max-w-md ">
+        <div className="relative flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border ">
+          <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+            Sign Up
+          </h4>
+          <p className="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
+            Nice to meet you! Enter your details to register.
           </p>
-        </label>
+          <form className="max-w-screen-lg mt-8 mb-2 w-80 sm:w-96" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-6 mb-1">
+              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                Your Name
+              </h6>
+              <div className="relative h-11 w-full min-w-[200px]">
+                <input
+                  placeholder="Your Name"
+                  type="text"
+                  ref={userRef}
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                  autoComplete="off"
+                  required
+                  onFocus={() => setUserFocus(true)}
+                  onBlur={() => setUserFocus(false)}
+                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                />
+                
+              </div>
+              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                Your Email
+              </h6>
+              <div className="relative h-11 w-full min-w-[200px]">
+                <input
+                  placeholder="name@mail.com"
+                  type="email"
+                  ref={emailRef}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="off"
+                  required
+                  onFocus={() => setEmailFocus(true)}
+                  onBlur={() => setEmailFocus(false)}
+                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                />
+               
+              </div>
+              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                Password
+              </h6>
+              <div className="relative h-11 w-full min-w-[200px]">
+                <input
+                  type="password"
+                  placeholder="********"
+                  ref={pwdRef}
+                  value={pwd}
+                  onChange={(e) => setPwd(e.target.value)}
+                  autoComplete="off"
+                  required
+                  onFocus={() => setPwdFocus(true)}
+                  onBlur={() => setPwdFocus(false)}
+                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                />
+               
+              </div>
+            </div>
+            <div className="inline-flex items-center">
+              <label className="relative -ml-2.5 flex cursor-pointer items-center rounded-full p-3" htmlFor="remember">
+              <input
+  type="checkbox"
+  checked={agreeTerms}
+  onChange={(e) => setAgreeTerms(e.target.checked)}
+  className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:bg-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"
+  id="remember"
+/>
+                <span className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" strokeWidth="1">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                  </svg>
+                </span>
+              </label>
+              <label className="mt-px font-light text-gray-700 cursor-pointer select-none" htmlFor="remember">
+                <p className="flex items-center font-sans text-sm antialiased font-normal leading-normal text-gray-700">
+                  I agree the
+                  <a href="#" className="font-medium transition-colors hover:text-gray-900">
+                    &nbsp;Terms and Conditions
+                  </a>
+                </p>
+              </label>
+            </div>
+            <button
+              className="mt-6 block w-full select-none rounded-lg bg-gray-900 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="submit"
+              disabled={!validName || !validEmail || !validPwd || !agreeTerms}
+             onClick={handleSubmit}
+            >
+              Sign Up
+            </button>
+            <p className="block mt-4 font-sans text-base antialiased font-normal leading-relaxed text-center text-gray-700">
+              Already have an account?
+              <Link to='/login'>
+                <a href="#" className="font-medium text-gray-900">
+                  Sign In
+                </a>
+              </Link>
+            </p>
+          </form>
+          {pwdFocus && pwd && !validPwd && <AlertPwd />}
+          {emailFocus && email && !validEmail && <AlertEmail />}
+          {userFocus && user && !validName && <AlertName />}
+
+        </div>
       </div>
-      <button
-        class="mt-6 block w-full select-none rounded-lg bg-gray-900 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-        type="button">
-        sign up
-      </button>
-      <p class="block mt-4 font-sans text-base antialiased font-normal leading-relaxed text-center text-gray-700">
-        Already have an account?
-        <Link to='/login'>
-        <a href="#" class="font-medium text-gray-900">
-          Sign In
-        </a>
-        </Link>
-      </p>
-    </form>
-  </div>  
-  </div>
-  )
+    </div>
+  );
+};
+
+function AlertName() {
+  return (
+    <div className="flex w-full flex-col gap-2 mt-4">
+      <Alert variant="gradient" icon={<IconOutlined />}>
+        <Typography className="font-medium">
+          Ensure that these requirements are met:
+        </Typography>
+        <ul className="mt-2 ml-2 list-inside list-disc">
+          <li>Start with a letter</li>
+          <li>Can include letters, numbers, hyphens, and underscores</li>
+          <li>Must be between 3 and 23 characters in length</li>
+        </ul>
+      </Alert>
+    </div>
+  );
 }
 
-export default Register
+function AlertEmail() {
+  return (
+    <div className="flex w-full flex-col gap-2 mt-4">
+      <Alert variant="gradient" icon={<IconOutlined />}>
+        <Typography className="font-medium">
+          Please enter a valid email address.
+        </Typography>
+      </Alert>
+    </div>
+  );
+}
+
+function AlertPwd() {
+  return (
+    <div className="flex w-full flex-col gap-2 mt-4">
+      <Alert variant="gradient" icon={<IconOutlined />}>
+        <Typography className="font-medium">
+          Ensure that these requirements are met:
+        </Typography>
+        <ul className="mt-2 ml-2 list-inside list-disc">
+          <li>At least one lowercase character</li>
+          <li>At least one uppercase character</li>
+          <li>At least one digit</li>
+          <li>At least one special character (!@#$%)</li>
+          <li>Must be between 8 and 24 characters in length</li>
+        </ul>
+      </Alert>
+    </div>
+  );
+}
+
+function IconOutlined() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      stroke="currentColor"
+      className="h-6 w-6"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+      />
+    </svg>
+  );
+}
+
+export default Register;
