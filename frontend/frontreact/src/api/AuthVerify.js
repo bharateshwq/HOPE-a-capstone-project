@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 
+
 const parseJwt = (token) => {
   try {
     return JSON.parse(atob(token.split(".")[1]));
@@ -22,7 +23,7 @@ const AuthVerify = (props) => {
     }
   });
 
-  return <div></div>;
+  return null
 };
 
 export default withRouter(AuthVerify);

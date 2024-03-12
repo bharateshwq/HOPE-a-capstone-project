@@ -3,11 +3,12 @@ import React from 'react';
 
 import {Routes, Route } from 'react-router-dom'
 import { Home, About, Contact,Login,Register, MyProfile, MyActivity, Help } from './pages/indexRoute';
-import NavBar from './components/NavBar'
+
 import { ComplexNavbar } from './components/ComplexNavbar';
+import AdminDash from './pages/AdminDash';
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
  <div className='bg-green-100 w-full h-screen'>
@@ -23,6 +24,10 @@ function App() {
     <Route path='/myActivity' element={<MyActivity/>}></Route>
     <Route path='/help' element={<Help />}> </Route>
     <Route path='/signout' element={<Login />}> </Route>
+    <Route path='/admin/dashboard' element={<AdminDash/>}></Route>
+
+
+    
 
 
   </Routes>

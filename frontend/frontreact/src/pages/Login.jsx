@@ -10,9 +10,8 @@ import {
   Checkbox,
   Button,
 } from "@material-tailwind/react";
-import axios from '../api/axios';
-import AuthService from '../api/services/auth.service';
 
+import AuthService from '../api/services/AuthService';
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
 // const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -21,9 +20,9 @@ const PASSWORD_REGEX = /.*/;
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  
   const navigate = useNavigate();
+  const [message,setMessage] =useState('');
  
   const [isUsernameValid, setUsernameValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
@@ -47,28 +46,25 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setMessage("");
-    setLoading(true);
-    
-    
-    AuthService.login(username,password).then(
-      () => {
-        navigate("/");
-        window.location.reload();
-      },
-      (error) => {
+    AuthService.login(username, password)
+      .then((data) => { // Changed 'response' to 'data'
+        
+        if (data.roles.includes("ROLE_ADMIN")) { // Changed 'response' to 'data'
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+      })
+      .catch((error) => {
         const resMessage =
           (error.response &&
             error.response.data &&
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        setLoading(false);
         setMessage(resMessage);
-      }
-    );
-    setPassword(""); setUsername("")
-  };
+      });
+};
 
 
 
@@ -111,13 +107,7 @@ const Login = () => {
           </Typography>
         </CardFooter>
       </Card>
-      {message && (
-            <div className="form-group">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
-          )}
+      
     </div>
   );
 }

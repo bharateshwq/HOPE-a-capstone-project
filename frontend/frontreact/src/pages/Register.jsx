@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import { Alert, Typography } from "@material-tailwind/react";
-import axios from '../api/axios';
+
+import AuthService from '../api/services/AuthService';
 
 const USER_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
 // const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const PWD_REGEX = /.*/;
-const REGISTER_URL="/signup";
+
 
 
 
@@ -29,6 +30,10 @@ const Register = () => {
   const [pwd, setPwd] = useState('');
 
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -56,27 +61,22 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    try {
-      const response = await axios.post('/api/auth/signup', {
-        username: user,
-        email: email,
-        password: pwd,
-        roles: ['user'] // Assuming the default role is 'user'
+    setMessage("");
+    AuthService.register(user, email, pwd)
+      .then(() => {
+        // Redirect to login page after successful registration
+        navigate("/login");
+      })
+      .catch((error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
       });
-  
-      // Handle success response
-      console.log(response.data); // Log the response data
-    } catch (error) {
-      // Handle error
-      console.error('Error:', error.response.data); // Log the error response data
-    }
-    setUser(""); setPwd(""); setEmail("");
   };
-
-
-  
-
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-white p-4 rounded-xl shadow-lg max-w-md ">
