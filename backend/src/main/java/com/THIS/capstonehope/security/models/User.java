@@ -40,6 +40,9 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  
+  private boolean verifyOTP =false;
+
   // for otp generation and MFA
   // private boolean mfaEnabled;
 

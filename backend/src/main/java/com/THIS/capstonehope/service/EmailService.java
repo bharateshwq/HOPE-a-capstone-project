@@ -46,6 +46,7 @@ public class EmailService{
 
 	  private final TemplateEngine htmlTemplateEngine;
 	  Context ctx;
+	  private Map<String, String> otpMap = new HashMap<>();
 	  
 	@Autowired
 	OtpUtil otpUtil;
@@ -135,8 +136,9 @@ public class EmailService{
 			   ctx.setVariable("name", userNameString);
 			   ctx.setVariable("springLogo", SPRING_LOGO_IMAGE);
 			   String otp = generateOTP();
+			   otpMap.put(userNameString, otp);
 
-				sendMail(emailString,otp,null);
+			   sendMail(emailString,otp,null);
 			
 			}
 			private String generateOTP() {
@@ -146,9 +148,25 @@ public class EmailService{
 				Random random = new Random();
 				StringBuilder otpBuilder = new StringBuilder();
 				for (int i = 0; i < otpLength; i++) {
-					otpBuilder.append(random.nextInt(10)); // Append random digits (0-9)
+					otpBuilder.append(random.nextInt(10));
+					
+					// Append random digits (0-9)
 				}
+
 				return otpBuilder.toString();
+}
+		public boolean validateOTP(String username, String enteredOTP) {
+				// Retrieve OTP associated with the email
+				String storedOTP = otpMap.get(username);
+
+				// Check if storedOTP exists and matches the entered OTP
+				if (storedOTP != null && storedOTP.equals(enteredOTP)) {
+					// Clear the OTP from the map after successful validation
+					otpMap.remove(username);
+					return true; // OTP is valid
+				} else {
+					return false; // OTP is invalid
+				}
 }
 
 	

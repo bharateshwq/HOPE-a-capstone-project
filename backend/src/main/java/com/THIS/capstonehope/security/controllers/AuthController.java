@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 
 import java.util.List;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,21 +13,23 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import org.springframework.ui.Model;
 
 import com.THIS.capstonehope.security.models.ERole;
 import com.THIS.capstonehope.security.models.Role;
@@ -39,7 +42,7 @@ import com.THIS.capstonehope.security.repository.RoleRepository;
 import com.THIS.capstonehope.security.repository.UserRepository;
 import com.THIS.capstonehope.security.security.jwt.JwtUtils;
 import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
-import com.THIS.capstonehope.security.util.OtpUtil;
+
 import com.THIS.capstonehope.service.EmailService;
 
 
@@ -126,6 +129,8 @@ public class AuthController {
               .badRequest()
               .body(new MessageResponse("Error: Email is already in use!"));
     }
+    
+   
 
     // Create new user's account
     User user = new User(signUpRequest.getUsername(),
@@ -173,4 +178,20 @@ public class AuthController {
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
+
+  @PostMapping("/verifyOTP")
+    public ResponseEntity<Object> verifyOTP(@RequestParam String username, @RequestParam String enteredOTP) {
+        if (emailService.validateOTP(username, enteredOTP)) {
+          User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+          user.setVerifyOTP(true);
+          userRepository.save(user);
+            return new ResponseEntity<>("OTP validation successful", HttpStatus.OK);
+          
+        } else {
+          User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+         
+          userRepository.delete(user);
+            return new ResponseEntity<>("Invalid OTP", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
