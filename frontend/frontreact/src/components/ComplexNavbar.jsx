@@ -12,6 +12,8 @@ import {
   Card,
   IconButton,
 } from "@material-tailwind/react";
+import AuthService from "../api/services/AuthService";
+import {useNavigate} from 'react-router-dom'
 import {
   CubeTransparentIcon,
   ChatBubbleLeftRightIcon,
@@ -28,7 +30,8 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
-import { logout, loginVar } from "../api/services/AuthService";
+import useAuth from "../hooks/useAuth";
+
 
  
 // profile menu component
@@ -55,10 +58,31 @@ const profileMenuItems = [
     link: '/signout'
   },
 ];
+
   function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+  // const { setAuth } = useContext(AuthContext);
+  const {setAuth} = useAuth();
+  const navigate = useNavigate();
   const closeMenu = () => setIsMenuOpen(false);
+ 
+
+  const handleSignOut = (e) => {
+    e.preventDefault();
+    AuthService.logout()
+    .then((data)=>{
+      setAuth({})
+      navigate("/");
+      
+  })
+    .catch(
+      (error)=>{
+      
+      }
+    )
+      
+    }
+  
  
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -90,7 +114,7 @@ const profileMenuItems = [
             <Link to={isLastItem ? undefined : link}>
             <MenuItem
               key={label}
-              onClick={isLastItem ? logout : closeMenu}
+              onClick={isLastItem ? handleSignOut : closeMenu}
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"

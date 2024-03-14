@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+
 import {
   Card,
   CardHeader,
@@ -9,28 +11,37 @@ import {
   Input,
   Checkbox,
   Button,
+  Alert
 } from "@material-tailwind/react";
+import LoadingBar from 'react-top-loading-bar'
 
 import  AuthService from '../api/services/AuthService';
-import AuthVerify from '../api/AuthVerify';
+
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
 // const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const PASSWORD_REGEX = /.*/;
 
 const Login = () => {
+  const {setAuth} = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  
+ 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  const navigate = useNavigate();
-  const [message,setMessage] =useState('');
+  const [message,setMessage] = useState('');
  
   const [isUsernameValid, setUsernameValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
 
+  const refLoading = useRef();
+
   useEffect(() => {
     // const [loggedIn,setLoggedIn] = useState('')
-    console.log(loginVar)
+    
     setUsernameValid(USERNAME_REGEX.test(username));
   }, [username]);
 
@@ -46,28 +57,40 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  // const handleLoadSomething = () => {
+  //   refLoading.current.continuousStart();
+  //   console.log("bar started")
+  //   setTimeout(() => {
+  //     console.err("...loading something");
+  //     refLoading.current.complete();
+  //   }, 2000);
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage("");
     
-    AuthService.login(username, password)
+    refLoading.current.continuousStart() 
+    AuthService.login(username, password ,setAuth,setMessage)
       .then((data) => { // Changed 'response' to 'data'
-     
-        if (data.roles.includes("ROLE_ADMIN")) { // Changed 'response' to 'data'
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/");
-        }
+        setUsername("")
+       setPassword("")
+        refLoading.current.complete();
+       
+        navigate(from, { replace:true });
+        console.log("message is set to",message);
+        // if (data.roles.includes("ROLE_ADMIN")) { // Changed 'response' to 'data'
+        //   navigate("/admin/dashboard");
+        // } else if(data.roles.includes("ROLE_USER")) {
+        //   navigate("/");
+        // }
+       
         
+      
+       
       })
       .catch((error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setMessage(resMessage);
+       
+        
       });
 };
 
@@ -76,7 +99,25 @@ const Login = () => {
   const isFormValid = isUsernameValid && isPasswordValid ;
 
   return (
-    <div className='flex justify-center items-center mt-24'>
+    <div className='flex items-center justify-center flex-col'>
+    
+        {message? 
+        <Alert
+        className= {`w-96 h-26 text-sm m-5 p-5 bg-red-600`}
+        open={open}
+        onClose={() => setMessage('')}
+        animate={{
+          mount: { y: 0 },
+          unmount: { y: 100 },
+        }}
+      >
+        {message}
+      </Alert>
+        //GREENCOLOR
+        : <><LoadingBar color='#4caf50' ref={refLoading} /></>}
+         
+    <div className='flex justify-center items-center mt-24' style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+   
       <Card className="w-96">
         <CardHeader
           variant="gradient"
@@ -112,7 +153,9 @@ const Login = () => {
           </Typography>
         </CardFooter>
       </Card>
-      <AuthVerify logOut={AuthService.logout} />
+      {/* <AuthVerify logOut={AuthService.logout} /> */}
+      {/* <AuthService/> */}
+    </div>
     </div>
   );
 }

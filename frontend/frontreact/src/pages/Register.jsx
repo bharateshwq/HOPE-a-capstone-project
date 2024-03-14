@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { Link ,useNavigate} from 'react-router-dom';
 import { Alert, Typography } from "@material-tailwind/react";
-
+import LoadingBar from 'react-top-loading-bar'
 import AuthService from '../api/services/AuthService';
 
 const USER_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
@@ -30,8 +30,10 @@ const Register = () => {
   const [pwd, setPwd] = useState('');
 
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [successful, setSuccessful] = useState(false);
+  const [message, setMessage] = useState('');
+  const refLoading = useRef();
+  const [success,setSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,28 +61,61 @@ const Register = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit =  (e) => {
     e.preventDefault();
-    setMessage("");
-    AuthService.register(user, email, pwd)
-      .then(() => {
+    
+    setMessage('')
+    refLoading.current.continuousStart() 
+   
+    AuthService.register(user, email, pwd,setMessage)
+      .then((data) => {
+        setMessage('')
+        // setSuccess(true)
         // Redirect to login page after successful registration
+        refLoading.current.complete();
+      
         navigate("/login");
       })
       .catch((error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setMessage(resMessage);
+      // setSuccess(false)
+      console.log(message)
+        // const resMessage =
+        //   (error.response &&
+        //     error.response.data &&
+        //     error.response.data.message) ||
+        //   error.message ||
+        //   error.toString();
+        // setMessage(resMessage);
       });
   };
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-4 rounded-xl shadow-lg max-w-md ">
-        <div className="relative flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border ">
+<div className='flex items-center justify-center flex-col'>
+
+        {message? 
+          <Alert
+          className= {`w-96 h-26 text-sm m-5 p-5 bg-red-600 z-50`}
+          open={open}
+          onClose={() => setMessage('')}
+          animate={{
+            mount: { y: 0 },
+            unmount: { y: 100 },
+           
+          }}
+        >
+          {message}
+        </Alert>
+          //GREENCOLOR
+          : <><LoadingBar color='#4caf50' ref={refLoading}  /></>}
+
+
+    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} >
+
+    <div className="flex justify-center items-center h-screen mt-12"  >
+      
+    
+     
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md "  >
+        <div className="relative flex flex-col text-gray-700 bg-transparent shadow-none rounded-xl bg-clip-border  "  >
           <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
             Sign Up
           </h4>
@@ -191,6 +226,8 @@ const Register = () => {
 
         </div>
       </div>
+    </div>
+    </div>
     </div>
   );
 };
