@@ -96,6 +96,7 @@ public class CampaignService {
 
         ////sending email block EMAIL
         try {
+            emailService.sendCertificate(user.getEmail(), user.getUsername(),campaign.getTitle(),donationCreation.getDonatedOn());
             emailService.donation(user.getEmail(), username,donationCreation.getAmount().toString(),campaign.getHostedBy(),donationCreation.getTransactionId(),donationCreation.getDonatedOn());
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block

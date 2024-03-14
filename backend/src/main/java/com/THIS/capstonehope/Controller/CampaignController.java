@@ -1,14 +1,17 @@
 package com.THIS.capstonehope.Controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +33,9 @@ import com.THIS.capstonehope.Models.Volunteer;
 import com.THIS.capstonehope.Repository.CampaignRepository;
 import com.THIS.capstonehope.Repository.SearchFilteringRepository;
 import com.THIS.capstonehope.service.CampaignService;
+import com.THIS.capstonehope.service.EmailService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -42,6 +47,16 @@ public class CampaignController {
 
 	 @Autowired
 private final CampaignService campaignService;
+// @Autowired
+// private final Campaign campaign;
+
+
+
+
+@Autowired
+EmailService emailService;
+
+
 	 
 	 @Autowired
 	 private final SearchFilteringRepository sfrep;
@@ -115,10 +130,14 @@ private final CampaignService campaignService;
 	            return ResponseEntity.notFound().build();
 	        }
 	    } 
-	 	@PostMapping("/donate/{id}")
-	    public Campaign addDonation(@PathVariable String id, @RequestBody Donation donationCreation) {
-	        return campaignService.addDonation(id, donationCreation);
-	    }
+			@PostMapping("/donate/{projectId}")
+		public ResponseEntity<Campaign> addDonation(@PathVariable String projectId, @RequestBody Donation donationCreation) {
+			
+				Campaign updatedCampaign = campaignService.addDonation(projectId, donationCreation);
+				// emailService.sendCertificate(updatedCampaign.getEmail(), updatedCampaign);
+				return ResponseEntity.ok(updatedCampaign);
+
+		}
 
 	    @PostMapping("/volunteer/{id}")
 	    public Campaign addParticipation(@PathVariable String id) {
