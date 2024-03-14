@@ -21,7 +21,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.THIS.capstonehope.security.models.User;
-import com.THIS.capstonehope.security.util.OtpUtil;
+
 
 import jakarta.activation.DataSource;
 import jakarta.mail.MessagingException;
@@ -46,8 +46,8 @@ public class EmailService{
 	  private final TemplateEngine htmlTemplateEngine;
 	  Context ctx;
 	  
-	@Autowired
-	OtpUtil otpUtil;
+	
+
 	
 	  public EmailService(Environment environment, JavaMailSender mailSender, TemplateEngine htmlTemplateEngine) {
 	    this.environment = environment;

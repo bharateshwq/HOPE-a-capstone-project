@@ -7,12 +7,14 @@ public class UserInfoResponse {
   private String username;
   private String email;
   private List<String> roles;
+  private String jwttoken;
 
-  public UserInfoResponse(String id, String username, String email, List<String> roles) {
+  public UserInfoResponse(String id, String username, String email, List<String> roles ,String token) {
     this.id = id;
     this.username = username;
     this.email = email;
     this.roles = roles;
+    this.jwttoken = token;
   }
 
   public String getId() {
@@ -22,6 +24,15 @@ public class UserInfoResponse {
   public void setId(String id) {
     this.id = id;
   }
+
+  public String getjwttoken() {
+    return jwttoken;
+  }
+
+  public void setjwttoken(String jwttoken) {
+    this.jwttoken = jwttoken;
+  }
+
 
   public String getEmail() {
     return email;

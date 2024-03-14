@@ -11,7 +11,8 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-import AuthService from '../api/services/AuthService';
+import  AuthService from '../api/services/AuthService';
+import AuthVerify from '../api/AuthVerify';
 
 const USERNAME_REGEX = /^[A-z][A-z0-9-_ ]{2,22}$/;
 // const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -28,6 +29,8 @@ const Login = () => {
   const [isPasswordValid, setPasswordValid] = useState(false);
 
   useEffect(() => {
+    // const [loggedIn,setLoggedIn] = useState('')
+    console.log(loginVar)
     setUsernameValid(USERNAME_REGEX.test(username));
   }, [username]);
 
@@ -46,14 +49,16 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setMessage("");
+    
     AuthService.login(username, password)
       .then((data) => { // Changed 'response' to 'data'
-        
+     
         if (data.roles.includes("ROLE_ADMIN")) { // Changed 'response' to 'data'
           navigate("/admin/dashboard");
         } else {
           navigate("/");
         }
+        
       })
       .catch((error) => {
         const resMessage =
@@ -107,7 +112,7 @@ const Login = () => {
           </Typography>
         </CardFooter>
       </Card>
-      
+      <AuthVerify logOut={AuthService.logout} />
     </div>
   );
 }

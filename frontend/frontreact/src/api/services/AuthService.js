@@ -1,7 +1,8 @@
+import { useState } from "react";
 import axios from "../axios";
+import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:3000/api/auth/";
-
+const [loggedIn,setLoggedIn] =useState();
 const register = (user, email, pwd) => {
   return axios.post('/api/auth/signup', {
     username: user,
@@ -15,15 +16,33 @@ const register = (user, email, pwd) => {
   });
 };
 
-const login = (username, password) => {
+const decodeToken = (token) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    console.log(decodedToken)
+    return decodedToken;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+}
+
+
+ const login = (username, password) => {
     return axios.post('/api/auth/signin', {
         username: username,
         password: password
       })
       .then((response) => {
+   
         if (response.data.username) {
+          // console.log(response)
+          decodeToken(response.data.jwttoken)
           localStorage.setItem("user", JSON.stringify(response.data));
-          localStorage.setItem("role", response.data.roles[0]);
+          localStorage.setItem("role", response.data.roles);
+          console.log("hello")
+          setCurrentRole(localStorage.getItem("roles")[0])
+          console.log(loggedIn)
         }
         return response.data;
       })
@@ -32,24 +51,40 @@ const login = (username, password) => {
         console.error('Error:', error);
         throw error; // Rethrow the error to be handled by the caller
       });
+      
 };
 
-const logout = () => {
+ const logout = () => {
+  console.log("deleted")
   localStorage.removeItem("user");
-  return axios.post(API_URL + "signout").then((response) => {
-    return response.data;
-  });
+  localStorage.removeItem("role");
+ 
+  // return axios.post("/signout").then((response) => {
+  //   return response.data;
+  // });
+  
 };
 
-const getCurrentUser = () => {
+ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
+
+const getCurrentRole = () => {
+  return loggedIn;
+}
+const setCurrentRole = (role) => {
+  setLoggedIn(role)
+}
 
 const AuthService = {
   register,
   login,
   logout,
   getCurrentUser,
+  decodeToken,
+  getCurrentRole,
+  setCurrentRole,
+  loggedIn
 }
 
 export default AuthService;

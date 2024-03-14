@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
+// @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/campaigns")
@@ -92,7 +93,7 @@ private final CampaignService campaignService;
 	 }
 	 //admin dashboard
 	 @GetMapping("mainAdminDash")
-  @PreAuthorize("hasRole('ADMIN')")
+  	@PreAuthorize("hasRole('ADMIN')")
 	 public List<Campaign> sortedVerifiedandUnverCampaigns(){
 		 return sfrep.SortedVerifiedandUnverified();
 	 }

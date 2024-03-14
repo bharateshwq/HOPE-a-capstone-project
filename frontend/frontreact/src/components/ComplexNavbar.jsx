@@ -28,6 +28,7 @@ import {
   Bars2Icon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import { logout, loginVar } from "../api/services/AuthService";
 
  
 // profile menu component
@@ -86,10 +87,10 @@ const profileMenuItems = [
         {profileMenuItems.map(({ label, icon, link }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
-            <Link to={link}>
+            <Link to={isLastItem ? undefined : link}>
             <MenuItem
               key={label}
-              onClick={closeMenu}
+              onClick={isLastItem ? logout : closeMenu}
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -106,6 +107,7 @@ const profileMenuItems = [
                 variant="small"
                 className="font-normal"
                 color={isLastItem ? "red" : "inherit"}
+             
               >
                 {label}
               </Typography>

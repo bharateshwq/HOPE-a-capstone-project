@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,12 +42,12 @@ import com.THIS.capstonehope.security.repository.RoleRepository;
 import com.THIS.capstonehope.security.repository.UserRepository;
 import com.THIS.capstonehope.security.security.jwt.JwtUtils;
 import com.THIS.capstonehope.security.security.services.UserDetailsImpl;
-import com.THIS.capstonehope.security.util.OtpUtil;
+
 import com.THIS.capstonehope.service.EmailService;
 
 
 //for Angular Client (withCredentials)
-//@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600, allowCredentials="true")
+// @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600, allowCredentials="true")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/api/auth")
@@ -74,7 +77,27 @@ public class AuthController {
   // public String showSignInForm(Model model) {
   //     return "login"; // This will return the signin.html Thymeleaf template
   // }
- 
+  @PostMapping("/signout")
+  public ResponseEntity<?> signOut(HttpServletResponse response, @CookieValue(name = "${bezkoder.app.jwtCookieName}", required = false) String jwtToken) {
+    // Clear JWT token cookie
+      if (jwtToken != null) {
+          Cookie cookie = new Cookie("bearer", null);
+          cookie.setMaxAge(0);
+          cookie.setPath("/");
+          response.addCookie(cookie);
+      }
+  
+      // Clear any other session-related data
+      // For example, you might invalidate a session or clear any user-related data
+  
+      return ResponseEntity.ok().build();
+  }
+  
+
+
+
+
+
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -104,13 +127,14 @@ public class AuthController {
       e.printStackTrace();
     }
 
-
+    
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
             .body(new UserInfoResponse(userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    roles));
+                    roles,
+                    jwtCookie.toString()));
   }
 
   @PostMapping("/signup")
