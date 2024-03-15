@@ -227,7 +227,7 @@ const navListItems = [
   {
     label: "AddProject",
     icon: ChatBubbleLeftRightIcon,
-    link: '/contact'
+    link: '/CampaignForm'
   },
   {
     label: "About Us",

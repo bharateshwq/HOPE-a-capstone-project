@@ -1,11 +1,14 @@
-import React from 'react'
+import React from 'react';
+import ProfileContent from '../components/ProfileContent';
+import ProfileDetails from '../components/ProfileDetails';
 
 function MyProfile() {
   return (
-    <div className=' flex justify-center items-center w-full h-screen'>
-   
-    <h1 className='text-4xl'>MyProfile</h1>
-  </div>
+<div className="flex flex-col justify-center items-center w-full h-screen mt-96">
+  <ProfileContent />
+  <ProfileDetails />
+</div>
+
   )
 }
 
