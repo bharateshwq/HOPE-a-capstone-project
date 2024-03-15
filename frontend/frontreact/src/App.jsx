@@ -9,14 +9,14 @@ import {Routes, Route } from 'react-router-dom'
 import { ComplexNavbar } from './components/ComplexNavbar';
 import AdminDash from './pages/AdminDash';
 import Layout from './components/Layout';
+import CampaignForm from './pages/Contact';
 
 function App() {
   
 
   return (
-
-<div className='bg-green-100 w-full h-sccreen'>
-
+ <div className='bg-green-100 w-full h-full'>
+  {/* <NavBar /> */}
   <ComplexNavbar/>
 <Routes>
 
@@ -25,7 +25,7 @@ function App() {
   <Route path='/' element={<Home/>}></Route>
     <Route path='/login' element={<Login/>}></Route>
     <Route path='/register' element={<Register/>}></Route>
-    <Route path='/contact' element={<Contact/>}></Route>
+    <Route path='/contact' element={<CampaignForm/>}></Route>
     <Route path='/about' element={<About/>}></Route>
     <Route path='/help' element={<Help />}> </Route>
     {/* <Route path='/signout' element={<Login />}> </Route>   */}
@@ -34,13 +34,10 @@ function App() {
 <Route element={<RequireAuth allowedRoles={['ROLE_USER']}/>}>
     <Route path='/myProfile' element={<MyProfile/>}></Route>
     <Route path='/myActivity' element={<MyActivity/>}></Route>
-
-
     
-    </Route>
-
-    {/* admin :  admin access path*/}
-    <Route element={<RequireAuth allowedRoles={['ROLE_ADMIN']}/>}>
+  
+    <Route path='/help' element={<Help />}> </Route>
+    <Route path='/signout' element={<Login />}> </Route>
     <Route path='/admin/dashboard' element={<AdminDash/>}></Route>
 
 

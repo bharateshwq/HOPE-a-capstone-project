@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import AuthService from "../api/services/AuthService";
 import {useNavigate} from 'react-router-dom'
+
 import {
   CubeTransparentIcon,
   ChatBubbleLeftRightIcon,
@@ -28,7 +29,9 @@ import {
   PowerIcon,
   RocketLaunchIcon,
   Bars2Icon,
+  
 } from "@heroicons/react/24/solid";
+
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
@@ -222,7 +225,7 @@ function NavListMenu() {
 // nav list component
 const navListItems = [
   {
-    label: "Contact Us",
+    label: "AddProject",
     icon: ChatBubbleLeftRightIcon,
     link: '/contact'
   },
@@ -231,6 +234,11 @@ const navListItems = [
     icon:   InformationCircleIcon,
     link: '/about'
   },
+  // {
+  //   label: "AddCampaign",
+  //   icon:  <FaEdit />,
+  //   link: '/about'
+  // },
  
 ];
  

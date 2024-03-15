@@ -9,12 +9,13 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { HomeIcon, BellIcon, CurrencyDollarIcon } from "@heroicons/react/24/solid";
- 
+import { FaEdit } from "react-icons/fa";
 const Help = () => {
   return (
-    <div className='flex justify-center items-center mt-24'>
+   
+    <div className='flex justify-center items-center mt-10'>
     <div className="w-[32rem]">
-      <Timeline >
+     
         <TimelineItem>
           <TimelineConnector />
           <TimelineHeader>
@@ -22,15 +23,29 @@ const Help = () => {
               <HomeIcon className="h-4 w-4" />
             </TimelineIcon>
             <Typography variant="h5" color="blue-gray">
-              Timeline Title Here.
+              Dashboard
             </Typography>
           </TimelineHeader>
           <TimelineBody className="pb-8">
             <Typography color="gary" className="font-normal text-gray-600">
-              The key to more success is to have a lot of pillows. Put it this way, it took me
-              twenty five years to get these plants, twenty five years of blood sweat and tears, and
-              I&apos;m never giving up, I&apos;m just getting started. I&apos;m up to something. Fan
-              luv.
+            Once the project is being posted u can view the project on the dashboard where you can select the campaigns u want to participate in and you search the project by using the search bar.
+            </Typography>
+          </TimelineBody>
+        </TimelineItem>
+        <Timeline >
+        <TimelineItem>
+          <TimelineConnector />
+          <TimelineHeader>
+            <TimelineIcon className="p-2">
+            <FaEdit />
+            </TimelineIcon>
+            <Typography variant="h5" color="blue-gray">
+               Add campaign
+            </Typography>
+          </TimelineHeader>
+          <TimelineBody className="pb-8">
+            <Typography color="gary" className="font-normal text-gray-600">
+              Click on the add project icon in the navigation bar to add the type of campaign you want to post on the dashboard for various users to view and contribute to the project.
             </Typography>
           </TimelineBody>
         </TimelineItem>
@@ -41,15 +56,12 @@ const Help = () => {
               <BellIcon className="h-4 w-4" />
             </TimelineIcon>
             <Typography variant="h5" color="blue-gray">
-              Timeline Title Here.
+             Donate or Volunteer
             </Typography>
           </TimelineHeader>
           <TimelineBody className="pb-8">
             <Typography color="gary" className="font-normal text-gray-600">
-              The key to more success is to have a lot of pillows. Put it this way, it took me
-              twenty five years to get these plants, twenty five years of blood sweat and tears, and
-              I&apos;m never giving up, I&apos;m just getting started. I&apos;m up to something. Fan
-              luv.
+              While viewing the project u cant select the project to donate and you will be directed to the donation page and the same will happen for the volunteer also.
             </Typography>
           </TimelineBody>
         </TimelineItem>
@@ -59,15 +71,12 @@ const Help = () => {
               <CurrencyDollarIcon className="h-4 w-4" />
             </TimelineIcon>
             <Typography variant="h5" color="blue-gray">
-              Timeline Title Here.
+              Make Payment
             </Typography>
           </TimelineHeader>
           <TimelineBody>
             <Typography color="gary" className="font-normal text-gray-600">
-              The key to more success is to have a lot of pillows. Put it this way, it took me
-              twenty five years to get these plants, twenty five years of blood sweat and tears, and
-              I&apos;m never giving up, I&apos;m just getting started. I&apos;m up to something. Fan
-              luv.
+              If you select on donation the user pursue payment by getting redirected to payment page, where the user can complete the payment by choosing the desired payment method.
             </Typography>
           </TimelineBody>
         </TimelineItem>
