@@ -25,7 +25,7 @@ function App() {
   <Route path='/' element={<Home/>}></Route>
     <Route path='/login' element={<Login/>}></Route>
     <Route path='/register' element={<Register/>}></Route>
-   
+
     <Route path='/about' element={<About/>}></Route>
     <Route path='/help' element={<Help />}> </Route>
     {/* <Route path='/signout' element={<Login />}> </Route>   */}
@@ -35,6 +35,7 @@ function App() {
     <Route path='/myProfile' element={<MyProfile/>}></Route>
     <Route path='/myActivity' element={<MyActivity/>}></Route>
     <Route path='/CampaignForm' element={<CampaignForm/>}></Route>
+    
 
     
     </Route>

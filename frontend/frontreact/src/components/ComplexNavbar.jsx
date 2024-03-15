@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import AuthService from "../api/services/AuthService";
 import {useNavigate} from 'react-router-dom'
+import useAuth from "../hooks/useAuth";
 
 import {
   CubeTransparentIcon,
@@ -33,7 +34,8 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+
+
 
 
  
@@ -269,9 +271,12 @@ function NavList() {
  
 export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
- 
+  const { auth } = useAuth(); // Access auth state
+
+// Check if the auth object contains any user authentication information
+const isLoggedIn = !!auth && Object.keys(auth).length > 0;
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
+  
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -302,7 +307,7 @@ export function ComplexNavbar() {
           <Bars2Icon className="h-6 w-6" />
         </IconButton>
         <Link to='/login'>
-        <Button size="sm" variant="text">
+        <Button size="sm" variant="text"  className={isLoggedIn ? 'hidden' : ''} >
           <span>Log In</span>
         </Button>
         </Link>
