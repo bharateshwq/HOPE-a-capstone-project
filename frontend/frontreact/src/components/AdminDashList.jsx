@@ -17,8 +17,8 @@ const AdminDashList = (props) => {
       <List>
         <ListItem ripple={false} className="py-1 pr-1 pl-4">
           <div className='pr-6'>
-              <h1 className='text-xl font-extrabold'>title</h1>
-              <p className='pl-3'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit quod a perspiciatis ut ipsam, vitae sint eos cupiditate suscipit? Quisquam, ratione?</p>
+              <h1 className='text-xl font-extrabold'>Title</h1>
+              <p className='pl-3'>Donate for Education</p>
           <div>
               <h2 className='text-sm font-bold'>Email</h2>
               <p className='pl-3'><a href="mailto:example@example.com">example@example.com</a></p>

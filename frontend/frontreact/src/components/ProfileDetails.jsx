@@ -34,11 +34,11 @@ export default function ProfileDetails() {
                 </tr>
                 <tr>
                   <td className="text-sm">Campaign A</td>
-                  <td className="text-sm">$100</td>
+                  <td className="text-sm">₹1000</td>
                 </tr>
                 <tr>
                   <td className="text-sm">Campaign B</td>
-                  <td className="text-sm">$50</td>
+                  <td className="text-sm">₹5000</td>
                 </tr>
               </tbody>
             </table>
@@ -54,12 +54,12 @@ export default function ProfileDetails() {
                   <td className="text-sm font-semibold">Description</td>
                 </tr>
                 <tr>
-                  <td className="text-sm">Campaign X</td>
-                  <td className="text-sm">Description X</td>
+                  <td className="text-sm">Plantation</td>
+                  <td className="text-sm">Planted Trees in different areas</td>
                 </tr>
                 <tr>
-                  <td className="text-sm">Campaign Y</td>
-                  <td className="text-sm">Description Y</td>
+                  <td className="text-sm">Swachh</td>
+                  <td className="text-sm">Cleaned the beach</td>
                 </tr>
               </tbody>
             </table>

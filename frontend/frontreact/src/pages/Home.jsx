@@ -1,15 +1,35 @@
 import React from 'react'
 import { CarouselWithContent } from '../components/CarouselWithContent'
-
+// import { Card } from '@material-tailwind/react'
+//import Cards from '../components/Cards';
+ import Card from '../components/Cards'
 const Home = () => {
   return (
     <>
     <CarouselWithContent/>
-    <div className='flex justify-center items-center w-full h-screen'>
-      <h1 className='text-4xl'>Home</h1>
+    <div className='flex justify-center items-center w-full h-screen' >
+      {/* <h1 className='text-4xl'>Home</h1> */}
+      <Card
+      imageSrc="data:image/jpeg;base64,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"
+      title="Donate for Education"
+      description="Help children get access to quality education by donating today."
+      progress="75%"
+    />
+    <Card
+      imageSrc="https://th.bing.com/th?id=OIP.z70besx2whuuQg4qwrFcawHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+      title="Support for Clean Water"
+      description="Join us in providing clean water to communities in need around the world."
+      progress="50%"
+    />
+    <Card
+      imageSrc="https://th.bing.com/th/id/OIP.eO_PYTJP0kub-2Wa6p_dqwHaE8?w=230&h=180&c=7&r=0&o=5&cb=10&pid=1.7"
+      title="Volunteer for Environment"
+      description="Contribute your time and effort to protect and preserve the environment."
+      progress="25%"
+    />
     </div>
     </>
   )
 }
-
+ 
 export default Home
