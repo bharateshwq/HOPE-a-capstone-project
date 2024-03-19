@@ -34,7 +34,7 @@ import com.THIS.capstonehope.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 // @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequiredArgsConstructor

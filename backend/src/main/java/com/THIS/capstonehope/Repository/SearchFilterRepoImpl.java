@@ -3,6 +3,7 @@ package com.THIS.capstonehope.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,14 @@ public class SearchFilterRepoImpl implements SearchFilteringRepository{
 	private  CampaignRepository campaignRepo;
 		@Autowired
 		MongoConverter converter;
+		
+		 public  List<Campaign> filterLegitimateCampaigns(List<Campaign> campaigns) {
+		        return campaigns.stream()
+		                .filter(campaign -> campaign.getLegitimacy())
+		                .collect(Collectors.toList());
+		    }
+		
+		
 	@Override
 	public List<Campaign> findByText(String query) {
 		final List<Campaign> campaigns = new ArrayList<>();
@@ -42,7 +51,7 @@ public class SearchFilterRepoImpl implements SearchFilteringRepository{
 			    new Document("$sort", 
 			    new Document("endDate", 1L))));
 			result.forEach(doc -> campaigns.add(converter.read(Campaign.class, doc)));
-		return campaigns;
+		return filterLegitimateCampaigns(campaigns);
 	}
 	@Override
 	public List<Campaign> filterCampaign(String type) {
@@ -60,7 +69,7 @@ public class SearchFilterRepoImpl implements SearchFilteringRepository{
 		
 		
 			result.forEach(doc -> campaigns.add(converter.read(Campaign.class, doc)));
-		return campaigns;
+		return filterLegitimateCampaigns(campaigns);
 	}
 	@Override
 	public List<Campaign> sortCampaign(int asc) {
@@ -71,7 +80,8 @@ public class SearchFilterRepoImpl implements SearchFilteringRepository{
 		AggregateIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$sort", 
 		    new Document("endDate", asc))));	
 			result.forEach(doc -> campaigns.add(converter.read(Campaign.class, doc)));
-		return campaigns;
+			
+		return filterLegitimateCampaigns(campaigns);
 	}
 	@Override
 	public List<Campaign> VerifiedCampaign() {

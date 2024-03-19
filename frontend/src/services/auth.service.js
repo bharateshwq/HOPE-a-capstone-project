@@ -11,19 +11,36 @@ const register = (username, email, password) => {
 };
 
 const login = (username, password) => {
-  return axios
-    .post(API_URL + "signin", {
+  return fetch(API_URL + "signin", {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
       username,
-      password,
+      password
     })
-    .then((response) => {
-      if (response.data.username) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
-      console.log(response)
-      return response.data;
-    });
+  })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (data.username) {
+      localStorage.setItem("user", JSON.stringify(data));
+    }
+    console.log(data);
+    return data;
+  })
+  .catch((error) => {
+    console.error('There was a problem with the fetch operation:', error);
+    throw error; // You might want to handle the error differently
+  });
 };
+
 
 const logout = () => {
   localStorage.removeItem("user");

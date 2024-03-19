@@ -1,6 +1,33 @@
 import React from 'react';
+import AdminService from '../api/services/AdminService';
+import { useEffect } from 'react';
+import useAuth from "../hooks/useAuth";
+import Cookies from 'js-cookie';
+import axios from '../api/axios';
 
 const About = () => {
+  const { auth } = useAuth();
+  useEffect(() => {
+    const accessToken = Cookies.get('accessToken');
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/campaigns/mainDash', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${auth.accessToken}`, // Include the JWT token in the Authorization header
+          },
+          withCredentials: true, // Include cookies in the request
+        });
+
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div>
       {/* About Section */}

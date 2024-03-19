@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useNavigate } from "react";
 import axios from "../axios";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+import useAuth from "../../hooks/useAuth";
 
 
 const register = async (user, email, pwd,setMessage) => {
@@ -62,11 +64,12 @@ const decodeToken = (token) => {
 
  const login = async (username, password,setAuth,setMessage) => {
   try {
+    
     const response = await axios.post('/api/auth/signin', {
       username: username,
       password: password
     });
-  
+    
     console.log(response);
   
     if (response.data.username) {
@@ -77,7 +80,12 @@ const decodeToken = (token) => {
       localStorage.setItem("user", JSON.stringify(response.data));
       localStorage.setItem("role", roles);
       setAuth({ username, password, roles, accessToken });
+      const { auth } = useAuth();
       // console.log("hello")
+      if (auth.accessToken) {
+        // Set the access token in a cookie named 'accessToken'
+        Cookies.set('accessToken', auth.accessToken, { expires: 1, secure: true, sameSite: 'none' });
+      }
     }
   
     return response.data;
@@ -115,12 +123,15 @@ const decodeToken = (token) => {
   
 };
 
- const logout = async () => {
- 
+ const logout = async (setAuth,navigate) => {
+  
   console.log("deleted")
-  await localStorage.removeItem("user");
-  await localStorage.removeItem("role");
-
+   localStorage.removeItem("user");
+   localStorage.removeItem("role");
+   Cookies.remove('accessToken');
+   console.log("hello world  ")
+   setAuth({})
+   navigate("/");
   return "done"
   
  

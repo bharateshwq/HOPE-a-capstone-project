@@ -49,8 +49,14 @@ public class User {
 //------------------
   @DBRef
   private Set<Role> roles = new HashSet<>();
+  
 private List<Donation> donations;
+
 private List<Volunteer> volunteerings;
+
+
+
+
   public User() {
   }
 //creation +email
@@ -59,6 +65,7 @@ private List<Volunteer> volunteerings;
     this.email = email;
     this.password = password;
   }
+  
   //mongo without pass
   public User(String Id,String username,List<Donation> donations,List<Volunteer>volunteerings) {
   this.id=Id;

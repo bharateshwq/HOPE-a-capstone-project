@@ -48,7 +48,7 @@ import com.THIS.capstonehope.service.EmailService;
 
 //for Angular Client (withCredentials)
 // @CrossOrigin(origins = "http://localhost:5173", maxAge = 3600, allowCredentials="true")
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -130,7 +130,8 @@ public class AuthController {
     
 
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-            .body(new UserInfoResponse(userDetails.getId(),
+            .body(new UserInfoResponse(
+            		userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
                     roles,

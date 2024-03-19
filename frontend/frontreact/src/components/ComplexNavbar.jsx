@@ -74,10 +74,11 @@ const profileMenuItems = [
 
   const handleSignOut = (e) => {
     e.preventDefault();
-    AuthService.logout()
+    AuthService.logout(setAuth,navigate)
     .then((data)=>{
-      setAuth({})
-      navigate("/");
+      // console.log("hello world  ")
+      // setAuth({})
+      // navigate("/");
       
   })
     .catch(
