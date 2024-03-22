@@ -74,18 +74,15 @@ const decodeToken = (token) => {
   
     if (response.data.username) {
       console.log(response.data.jwttoken);
+     decodeToken(response.data.jwttoken)
       // decodeToken(response.data.jwttoken)
       const accessToken = response?.data?.jwttoken;
       const roles = response?.data?.roles;
       localStorage.setItem("user", JSON.stringify(response.data));
       localStorage.setItem("role", roles);
       setAuth({ username, password, roles, accessToken });
-      const { auth } = useAuth();
-      // console.log("hello")
-      if (auth.accessToken) {
-        // Set the access token in a cookie named 'accessToken'
-        Cookies.set('accessToken', auth.accessToken, { expires: 1, secure: true, sameSite: 'none' });
-      }
+      console.log("set up auth")
+      
     }
   
     return response.data;
@@ -128,7 +125,7 @@ const decodeToken = (token) => {
   console.log("deleted")
    localStorage.removeItem("user");
    localStorage.removeItem("role");
-   Cookies.remove('accessToken');
+   Cookies.remove('bearer');
    console.log("hello world  ")
    setAuth({})
    navigate("/");
