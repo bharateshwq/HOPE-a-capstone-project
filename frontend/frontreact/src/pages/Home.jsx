@@ -4,6 +4,8 @@ import axios from '../api/axios';
 import CampaignService from '../api/services/CampaignService';
 import useAuth from '../hooks/useAuth';
 import Cookies from "js-cookie";
+import SearchCampaign from '../components/SearchCampaign';
+import FilterCampaign from '../components/FilterCampaign';
 
 
 const Home = () => {
@@ -28,9 +30,11 @@ const Home = () => {
   }, []);
   return (
     <>
-    <div className='flex justify-center items-center w-full h-screen'>
+    <div className='flex justify-center items-center w-full h-screen flex-col'>
       <h1 className='text-4xl'>Home</h1>
       <button onClick={CampaignService.getSorted}>sorted list</button>
+      <SearchCampaign/>
+      <FilterCampaign/>
     </div>
     </>
   )

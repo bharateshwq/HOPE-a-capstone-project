@@ -1,6 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import UserService from '../api/services/UserService';
 
 export default function ProfileDetails() {
+  useEffect(() => {
+    
+   
+    UserService.getUser()
+
+    
+  }, []);
+
   return (
     <div className="w-full max-w-sm rounded-xl border">
       <div className="p-6 grid gap-4 bg-white">

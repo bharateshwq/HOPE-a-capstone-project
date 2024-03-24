@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +30,9 @@ import com.THIS.capstonehope.Models.Donation;
 import com.THIS.capstonehope.Models.Volunteer;
 import com.THIS.capstonehope.Repository.CampaignRepository;
 import com.THIS.capstonehope.Repository.SearchFilteringRepository;
+import com.THIS.capstonehope.security.models.User;
+import com.THIS.capstonehope.security.payload.response.MessageResponse;
+import com.THIS.capstonehope.security.repository.UserRepository;
 import com.THIS.capstonehope.service.CampaignService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,16 +47,19 @@ public class CampaignController {
 
 	 @Autowired
 private final CampaignService campaignService;
+	  @Autowired
+	  UserRepository userRepository;
 	 
 	 @Autowired
 	 private final SearchFilteringRepository sfrep;
 
 	@GetMapping("/check")
-	public UserDetails check() {
+	public User check() {
 		UserDetails userDetails =
 				(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		return userDetails;
+		 User user = userRepository.findByUsername(userDetails.getUsername())
+	                .orElseThrow(() -> new UsernameNotFoundException("Could not find present user"));
+		return user;
 	}
 	//add campaign
 	 	@PostMapping
